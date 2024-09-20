@@ -1,4 +1,4 @@
-import 'package:chairty_platform/components/drawer_menu.dart';
+import 'package:chairty_platform/components/drawer/drawer_menu.dart';
 import 'package:chairty_platform/components/requests_list/request_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

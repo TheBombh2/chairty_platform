@@ -1,4 +1,4 @@
-import 'package:chairty_platform/components/drawer_list_tile.dart';
+import 'package:chairty_platform/components/drawer/drawer_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -48,13 +48,20 @@ class DrawerMenu extends StatelessWidget {
             ),
           ),
           DrawerListTile(
-              tileText: 'Profile',
-              tileIcon: Icons.person_outline,
-              onTileClicked: () {}),
+            tileText: 'Profile',
+            tileIcon: Icons.person_outline,
+            onTileClicked: () {},
+          ),
           DrawerListTile(
-              tileText: 'Settings',
-              tileIcon: Icons.settings,
-              onTileClicked: () {}),
+            tileText: 'History',
+            tileIcon: Icons.history,
+            onTileClicked: () {},
+          ),
+          DrawerListTile(
+            tileText: 'Settings',
+            tileIcon: Icons.settings,
+            onTileClicked: () {},
+          ),
         ],
       ),
     );
