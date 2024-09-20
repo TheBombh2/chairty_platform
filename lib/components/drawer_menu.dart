@@ -19,7 +19,7 @@ class DrawerMenu extends StatelessWidget {
                 0xff034956,
               ),
             ),
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: SizedBox(
               width: double.infinity,
               child: Column(

@@ -36,8 +36,8 @@ class DonatorHomePage extends StatelessWidget {
         }),
       ),
       backgroundColor: const Color(0xFFF6FAF7),
-      drawer: DrawerMenu(),
-      body: RequestList(),
+      drawer: const DrawerMenu(),
+      body: const RequestList(),
     );
   }
 }

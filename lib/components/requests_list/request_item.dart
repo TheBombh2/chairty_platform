@@ -20,8 +20,8 @@ class RequestItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NeonContainer(
-      containerColor: Color(0xffE2F1F2),
-      borderColor: Color(0xffE2F1F2),
+      containerColor: const Color(0xffE2F1F2),
+      borderColor: const Color(0xffE2F1F2),
       lightBlurRadius: 16,
       spreadColor: isCompleted ? Colors.green : Colors.pink,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
@@ -60,7 +60,7 @@ class RequestItem extends StatelessWidget {
                   Text(
                     'Amount needed:',
                     style: GoogleFonts.varelaRound(
-                      color: Color.fromARGB(255, 10, 25, 27),
+                      color: const Color.fromARGB(255, 10, 25, 27),
                     ),
                   ),
                   Text(
@@ -106,7 +106,7 @@ class RequestItem extends StatelessWidget {
               icon: const Icon(Icons.read_more_outlined),
               onPressed: () {},
               style: FilledButton.styleFrom(
-                backgroundColor: Color(0xFFF26722),
+                backgroundColor: const Color(0xFFF26722),
               ),
               label: Text(
                 'Read more',
