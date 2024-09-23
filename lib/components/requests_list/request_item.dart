@@ -1,16 +1,16 @@
+import 'package:chairty_platform/pages/request_view_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neon_widgets/neon_widgets.dart';
 
 class RequestItem extends StatelessWidget {
-  const RequestItem({
-    super.key,
-    required this.paitentImgUri,
-    required this.paitentName,
-    required this.amountNeeded,
-    required this.paitentReason,
-    required this.isCompleted
-  });
+  const RequestItem(
+      {super.key,
+      required this.paitentImgUri,
+      required this.paitentName,
+      required this.amountNeeded,
+      required this.paitentReason,
+      required this.isCompleted});
   final String paitentName;
   final String paitentImgUri;
   final String paitentReason;
@@ -31,10 +31,12 @@ class RequestItem extends StatelessWidget {
         children: [
           Row(
             children: [
-               CircleAvatar(
-                radius: 30,
-                backgroundImage:
-                    AssetImage(paitentImgUri),
+              Hero(
+                tag: paitentName,
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(paitentImgUri),
+                ),
               ),
               const SizedBox(
                 width: 10,
@@ -104,7 +106,14 @@ class RequestItem extends StatelessWidget {
             child: FilledButton.icon(
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.read_more_outlined),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => RequestViewPage(
+                        name: paitentName, age: '20', imageURI: paitentImgUri),
+                  ),
+                );
+              },
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFF26722),
               ),

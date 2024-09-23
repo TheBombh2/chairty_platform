@@ -12,7 +12,7 @@ class _RequestListState extends State<RequestList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 3,
+      itemCount: 1,
       itemBuilder: (ctx, index) => const RequestItem(
         paitentImgUri: 'assets/images/avatar_placeholder.png',
         paitentReason:
