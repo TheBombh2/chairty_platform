@@ -39,6 +39,7 @@ dependencies:
   neon_widgets: ^2.0.0
   google_maps_flutter: ^2.9.0
   http: ^1.2.2
+  flutter_lints: ^4.0.0
 
 
 dev_dependencies:
