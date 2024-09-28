@@ -1,4 +1,4 @@
-import 'package:chairty_platform/pages/request_view_page.dart';
+import 'package:chairty_platform/screens/request_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neon_widgets/neon_widgets.dart';
@@ -109,7 +109,7 @@ class RequestItem extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (ctx) => RequestViewPage(
+                    builder: (ctx) => RequestViewScreen(
                         name: paitentName, age: '20', imageURI: paitentImgUri),
                   ),
                 );

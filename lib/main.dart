@@ -1,4 +1,5 @@
-import 'package:chairty_platform/pages/donator_home_page.dart';
+import 'package:chairty_platform/screens/donator_home_screen.dart';
+import 'package:chairty_platform/screens/patient_request_form.dart';
 import 'package:flutter/material.dart';
 
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DonatorHomePage(),
+      home: RequestAndEditScreen(),
     );
   }
 }

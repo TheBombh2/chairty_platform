@@ -1,17 +1,18 @@
-import 'package:chairty_platform/components/drawer/drawer_menu.dart';
-import 'package:chairty_platform/components/requests_list/request_list.dart';
+import 'package:chairty_platform/components/request_history_list/request_history_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class DonatorHomePage extends StatelessWidget {
-  const DonatorHomePage({super.key});
+import '../components/drawer/drawer_menu.dart';
+
+class RequestHistoryScreen extends StatelessWidget {
+  const RequestHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Find people to help",
+          "Request History",
           style: GoogleFonts.varelaRound(
             color: const Color(
               0xffE2F1F2,
@@ -37,7 +38,7 @@ class DonatorHomePage extends StatelessWidget {
       ),
       backgroundColor: const Color(0xFFF6FAF7),
       drawer: const DrawerMenu(),
-      body: const RequestList(),
+      body: RequestHistoryList(),
     );
   }
 }
