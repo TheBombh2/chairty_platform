@@ -1,15 +1,15 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
-import 'package:chairty_platform/screens/register_screen.dart';
+import 'package:chairty_platform/screens/auth_screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _enteredEmail = '';
   String _enteredPassword = '';
