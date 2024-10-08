@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthInterface {
@@ -13,7 +11,6 @@ class AuthInterface {
   static User? getCurrentUser() {
     return firebaseInstance.currentUser;
   }
-
 
   static Future<String> authinticateWithEmailAndPassword(
       String email, String password, bool isLogin) async {
