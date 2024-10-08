@@ -4,6 +4,7 @@ import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/Firebase/fire_storage.dart';
 import 'package:chairty_platform/components/user_image_picker.dart';
+import 'package:chairty_platform/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -22,9 +23,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   File? _selectedImage;
   String _selectedFirstName = '';
   String _selectedLastName = '';
-  String _selectedType = 'Donator';
+  UserType _selectedType = UserType.donator;
   DateTime? _selectedDateOfBirth;
-  String _selectedGender = 'Male';
+  Gender _selectedGender = Gender.male;
   String _selectedPhoneNumber = '';
   String _enteredEmail = '';
   String _enteredPassword = '';
@@ -51,16 +52,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           await FireStorageInterface.uploadUserPfp(userUid, _selectedImage!);
 
       final imageUrl = await storageRef.getDownloadURL();
-      await FirestoreInterface.registerNewUser(userUid, {
-        'email': _enteredEmail,
-        'type': _selectedType,
-        'first_name': _selectedFirstName,
-        'last_name': _selectedLastName,
-        'phone_number': _selectedPhoneNumber,
-        'gender': _selectedGender,
-        'date_of_birth': _selectedDateOfBirth,
-        'profile_picture-url': imageUrl
-      });
+      await FirestoreInterface.registerNewUser(
+          userUid,
+          CharityUser(
+                  userType: _selectedType,
+                  email: _enteredEmail,
+                  firstName: _selectedFirstName,
+                  lastName: _selectedLastName,
+                  gender: _selectedGender,
+                  phoneNumber: _selectedPhoneNumber,
+                  dateOfBirth: _selectedDateOfBirth!,
+                  imageUrl: imageUrl)
+              .toJson());
 
       setState(() {
         _isAuthenticating = false;
@@ -165,12 +168,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           Expanded(
                             child: DropdownButtonFormField(
-                              value: 'Donator',
-                              items: const [
+                              value: UserType.donator,
+                              items: [
                                 DropdownMenuItem(
-                                    value: 'Donator', child: Text('Donator')),
+                                    value: UserType.donator,
+                                    child: Text(UserType.donator.name[0]
+                                            .toUpperCase() +
+                                        UserType.donator.name.substring(1))),
                                 DropdownMenuItem(
-                                    value: 'Paitent', child: Text('Paitent')),
+                                    value: UserType.patient,
+                                    child: Text(UserType.patient.name[0]
+                                            .toUpperCase() +
+                                        UserType.patient.name.substring(1))),
                               ],
                               onChanged: (value) {
                                 _selectedType = value!;
@@ -208,12 +217,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           Expanded(
                             child: DropdownButtonFormField(
-                              value: 'Male',
-                              items: const [
+                              value: Gender.male,
+                              items: [
                                 DropdownMenuItem(
-                                    value: 'Male', child: Text('Male')),
+                                    value: Gender.male,
+                                    child: Text(
+                                        Gender.male.name[0].toUpperCase() +
+                                            Gender.male.name.substring(1))),
                                 DropdownMenuItem(
-                                    value: 'Female', child: Text('Female')),
+                                    value: Gender.female,
+                                    child: Text(
+                                        Gender.female.name[0].toUpperCase() +
+                                            Gender.female.name.substring(1))),
                               ],
                               onChanged: (value) {
                                 _selectedGender = value!;
@@ -287,12 +302,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    ElevatedButton(
-                      onPressed: _isAuthenticating ? null : _submit,
-                      child: _isAuthenticating
-                          ? const CircularProgressIndicator()
-                          : const Text("Register"),
-                    ),
+                    _isAuthenticating
+                        ? const CircularProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: _submit,
+                            child: const Text("Register"),
+                          ),
                   ],
                 ),
               ),

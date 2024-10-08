@@ -24,7 +24,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
     await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Choose an image soruce.'),
+        title: const Text('Choose an image soruce.'),
         content: Row(
           children: [
             Expanded(
@@ -33,7 +33,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
                   useCamera = true;
                   Navigator.of(context).pop();
                 },
-                child: Text('Camera'),
+                child: const Text('Camera'),
               ),
             ),
             Expanded(
@@ -42,7 +42,7 @@ class _UserImagePickerState extends State<UserImagePicker> {
                   useCamera = false;
                   Navigator.of(context).pop();
                 },
-                child: Text('Gallery'),
+                child: const Text('Gallery'),
               ),
             ),
           ],

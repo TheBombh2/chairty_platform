@@ -35,7 +35,7 @@ class AuthScreen extends StatelessWidget {
                   return const ProfileScreen();
                 }
               } else if (userTypeSnapshot.hasError) {
-                return Text('Error: ${userTypeSnapshot.error}');
+                AuthInterface.firebaseInstance.signOut();
               }
               return const Scaffold(
                 body: Center(
