@@ -14,6 +14,7 @@ class AuthInterface {
     return firebaseInstance.currentUser;
   }
 
+
   static Future<String> authinticateWithEmailAndPassword(
       String email, String password, bool isLogin) async {
     try {
