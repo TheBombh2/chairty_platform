@@ -103,20 +103,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text('Dont have an account?'))
                   ],
                 ),
-                const ElevatedButton(
-                  onPressed: AuthInterface.signOut,
-                  child: Text(
-                    'Sign out',
-                  ),
-                ),
-                StreamBuilder(
-                    stream: AuthInterface.firebaseInstance.authStateChanges(),
-                    builder: (ctx, snapshot) {
-                      if (snapshot.hasData) {
-                        return Text(snapshot.data!.uid);
-                      }
-                      return const Text("not signed in");
-                    })
               ],
             ),
           ),

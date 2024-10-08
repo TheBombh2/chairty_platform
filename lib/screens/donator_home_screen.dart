@@ -1,3 +1,4 @@
+import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/components/drawer/drawer_menu.dart';
 import 'package:chairty_platform/components/requests_list/request_list.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,15 @@ class DonatorHomeScreen extends StatelessWidget {
         ),
         centerTitle: true,
         backgroundColor: const Color(0xff034956),
+        actions: [
+          IconButton(
+              onPressed: AuthInterface.firebaseInstance.signOut,
+              icon: const Icon(
+                Icons.logout,
+                size: 40,
+                color: Colors.white,
+              ))
+        ],
         leading: Builder(builder: (ctx) {
           return IconButton(
             onPressed: () {

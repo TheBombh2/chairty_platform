@@ -1,4 +1,6 @@
 import 'package:chairty_platform/components/drawer/drawer_list_tile.dart';
+import 'package:chairty_platform/screens/profile_screen.dart';
+import 'package:chairty_platform/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -50,17 +52,29 @@ class DrawerMenu extends StatelessWidget {
           DrawerListTile(
             tileText: 'Profile',
             tileIcon: Icons.person_outline,
-            onTileClicked: () {},
+            onTileClicked: () {
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => const ProfileScreen()));
+            },
           ),
           DrawerListTile(
             tileText: 'History',
             tileIcon: Icons.history,
-            onTileClicked: () {},
+            onTileClicked: () {
+                Navigator.of(context).pop();
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => const ProfileScreen()));
+            },
           ),
           DrawerListTile(
             tileText: 'Settings',
             tileIcon: Icons.settings,
-            onTileClicked: () {},
+            onTileClicked: () {
+                Navigator.of(context).pop();
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
+            },
           ),
         ],
       ),

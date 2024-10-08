@@ -1,3 +1,4 @@
+import 'package:chairty_platform/screens/auth_screens/auth_screen.dart';
 import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
 import 'package:chairty_platform/screens/auth_screens/register_screen.dart';
 import 'package:chairty_platform/screens/donator_home_screen.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RegisterScreen(),
+      home: AuthScreen(),
     );
   }
 }
