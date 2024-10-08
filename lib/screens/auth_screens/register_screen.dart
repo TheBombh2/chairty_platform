@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:chairty_platform/Firebase/auth_interface.dart';
+import 'package:chairty_platform/Firebase/fire_store.dart';
+import 'package:chairty_platform/Firebase/fire_storage.dart';
 import 'package:chairty_platform/components/user_image_picker.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -47,18 +47,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         false,
       );
       final userUid = AuthInterface.getCurrentUser()!.uid;
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('user_profile_pictures')
-          .child('${userUid}.jpeg');
-      await storageRef.putFile(_selectedImage!);
+      final storageRef =
+          await FireStorageInterface.uploadUserPfp(userUid, _selectedImage!);
+
       final imageUrl = await storageRef.getDownloadURL();
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(
-            userUid,
-          )
-          .set({
+      await FirestoreInterface.registerNewUser(userUid, {
         'email': _enteredEmail,
         'type': _selectedType,
         'first_name': _selectedFirstName,
@@ -68,6 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         'date_of_birth': _selectedDateOfBirth,
         'profile_picture-url': imageUrl
       });
+
       setState(() {
         _isAuthenticating = false;
       });
@@ -86,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Something went wrong.')));
+          .showSnackBar(const SnackBar(content: Text('Something went wrong.')));
     }
   }
 
@@ -110,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Register'),
+        title: const Text('Register'),
       ),
       body: Center(
         child: SingleChildScrollView(

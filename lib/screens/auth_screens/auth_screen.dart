@@ -1,11 +1,9 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
+import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
-import 'package:chairty_platform/screens/auth_screens/register_screen.dart';
 import 'package:chairty_platform/screens/donator_home_screen.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class AuthScreen extends StatelessWidget {
   const AuthScreen({super.key});
@@ -14,7 +12,7 @@ class AuthScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<String> _getUserType(String uid) async {
       final document =
-          await FirebaseFirestore.instance.collection('users').doc(uid).get();
+          await FirestoreInterface.getDocumentFromCollectionByUid('users', uid);
 
       return document.get('type') as String;
     }
