@@ -1,4 +1,5 @@
 import 'package:chairty_platform/screens/donator_home_screen.dart';
+import 'package:chairty_platform/screens/patient_home_screen.dart';
 import 'package:chairty_platform/screens/patient_request_form.dart';
 import 'package:flutter/material.dart';
 
@@ -12,9 +13,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return  MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RequestAndEditScreen(),
+      home: PatientHomeScreen(),
+      routes: {
+        '/PatientRequest': (context) => RequestAndEditScreen(),
+        '/PatientHome': (context) => PatientHomeScreen(),
+      },
     );
   }
 }

@@ -1,10 +1,9 @@
+import 'package:chairty_platform/screens/patient_home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 
-Color darkColor = HexColor("#034956");
-Color lightColor = HexColor("#E2F1F2");
-Color deepOrange = HexColor("#F26722");
+import '../components/style.dart';
+
 
 var idController = TextEditingController();
 var reasonController = TextEditingController();
@@ -167,7 +166,12 @@ class RequestAndEditScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(builder: (context) => PatientHomeScreen()),
+                                        (Route<dynamic> route) => false,
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: darkColor),
                                 child:  const Text(
