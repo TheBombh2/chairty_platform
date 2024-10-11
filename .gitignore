@@ -4,6 +4,7 @@ firebase_options.dart
 google-services.json
 GoogleService-Info.plist
 .firebase
+firebase.json
 # Miscellaneous
 *.class
 *.log
