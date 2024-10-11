@@ -1,3 +1,5 @@
+import 'package:chairty_platform/Firebase/fire_store.dart';
+import 'package:chairty_platform/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Request {
@@ -12,19 +14,27 @@ class Request {
   final String hospitalLocation;
   final DateTime deadline;
   bool requestCompleted;
+  late CharityUser paitent;
 
   Request(
-      this.reason,
-      this.danger,
-      this.funds,
-      this.medicalDocumentUrl,
-      this.hospital,
-      this.hospitalLocation,
-      this.deadline,
-      {required this.patientId,
-        this.requestId,
-        this.donaterId,
-        this.requestCompleted = false});
+    this.reason,
+    this.danger,
+    this.funds,
+    this.medicalDocumentUrl,
+    this.hospital,
+    this.hospitalLocation,
+    this.deadline, {
+    required this.patientId,
+    this.requestId,
+    this.donaterId,
+    this.requestCompleted = false,
+  });
+
+  Future<void> initializePatient() async {
+    final value = await FirestoreInterface.getDocumentFromCollectionByUid(
+        'users', patientId);
+    paitent = CharityUser.fromJson(value.data() as Map<String, dynamic>);
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -41,7 +51,7 @@ class Request {
     };
   }
 
-  factory Request.fromJson(Map<String, dynamic> json,String docId) {
+  factory Request.fromJson(Map<String, dynamic> json, String docId) {
     return Request(
       json['reason'],
       json['danger'],

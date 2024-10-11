@@ -1,34 +1,38 @@
-import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/components/requests_list/request_item.dart';
+import 'package:chairty_platform/cubits/requests_cubit.dart';
+import 'package:chairty_platform/cubits/requests_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RequestList extends StatefulWidget {
+class RequestList extends StatelessWidget {
   const RequestList({super.key});
 
   @override
-  State<RequestList> createState() => _RequestListState();
-}
-
-class _RequestListState extends State<RequestList> {
-  void initState() {
-    super.initState();
-    FirestoreInterface.init("9As0D631chVeNZrcGuBD60MJWiB2").then((_)=>setState(() {
-      
-    }));//uid
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: FirestoreInterface.allRequests.length,
-      itemBuilder: (ctx, index) => RequestItem(
-        paitentImgUri: FirestoreInterface.patients[index].imageUrl,
-        paitentReason:
-            FirestoreInterface.allRequests[index].reason,
-        paitentName: "${FirestoreInterface.patients[index].firstName} ${FirestoreInterface.patients[index].lastName}",
-        amountNeeded: FirestoreInterface.allRequests[index].funds,
-        isCompleted: FirestoreInterface.allRequests[index].requestCompleted,
-      ),
-    );
+    return BlocBuilder<RequestsCubit, RequestsState>(builder: (ctx, state) {
+      if (state is RequestsLoading) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is RequeststError) {
+        return const Center(
+          child: Text('Something went wrong!'),
+        );
+      } else if (state is RequestsLoaded) {
+        return ListView.builder(
+            itemCount: state.requests.length,
+            itemBuilder: (ctx, index) {
+              final singleRequest = state.requests[index];
+
+              return RequestItem(
+                  paitentImgUri: singleRequest.paitent.imageUrl,
+                  paitentReason: singleRequest.reason,
+                  paitentName:
+                      "${singleRequest.paitent.firstName} ${singleRequest.paitent.lastName}",
+                  amountNeeded: singleRequest.funds,
+                  isCompleted: singleRequest.requestCompleted);
+            });
+      } else {
+        return const Center(child: Text('No Requests Available.'));
+      }
+    });
   }
 }
