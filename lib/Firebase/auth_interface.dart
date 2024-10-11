@@ -1,4 +1,3 @@
-import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
