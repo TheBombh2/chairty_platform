@@ -47,6 +47,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _enteredPassword,
         false,
       );
+      
+
       final userUid = AuthInterface.getCurrentUser()!.uid;
       final storageRef =
           await FireStorageInterface.uploadUserPfp(userUid, _selectedImage!);
@@ -68,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _isAuthenticating = false;
       });
+     Navigator.of(context).pop();
     } on FirebaseAuthException catch (error) {
       setState(() {
         _isAuthenticating = false;
@@ -76,15 +79,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error.message ?? 'Authentication failed')));
-    } catch (error) {
-      setState(() {
-        _isAuthenticating = false;
-      });
-
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Something went wrong.')));
     }
+
+
   }
 
   void _presentDatePicker() async {

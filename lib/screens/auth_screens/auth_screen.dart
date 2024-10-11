@@ -1,5 +1,6 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/Firebase/fire_store.dart';
+import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
 import 'package:chairty_platform/screens/donator_home_screen.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
@@ -29,7 +30,7 @@ class AuthScreen extends StatelessWidget {
               if (userTypeSnapshot.hasData) {
                 userType = userTypeSnapshot.data!;
 
-                if (userType == 'Donator') {
+                if (userType  == UserType.donator.name) {
                   return const DonatorHomeScreen();
                 } else {
                   return const ProfileScreen();
