@@ -1,4 +1,8 @@
 import 'package:chairty_platform/screens/auth_screens/auth_screen.dart';
+import 'package:chairty_platform/screens/auth_screens/register_screen.dart';
+import 'package:chairty_platform/screens/donator_home_screen.dart';
+import 'package:chairty_platform/screens/patient_request_form.dart';
+import 'package:chairty_platform/screens/request_history_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -16,9 +20,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthScreen(),
+      home:DonatorHomeScreen(),
     );
   }
 }

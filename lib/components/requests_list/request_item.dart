@@ -35,7 +35,7 @@ class RequestItem extends StatelessWidget {
                 tag: paitentName,
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage(paitentImgUri),
+                  backgroundImage: NetworkImage(paitentImgUri),
                 ),
               ),
               const SizedBox(

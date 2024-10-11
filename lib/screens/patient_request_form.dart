@@ -1,3 +1,6 @@
+import 'package:chairty_platform/Firebase/fire_store.dart';
+import 'package:chairty_platform/models/request.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +19,14 @@ var locationController = TextEditingController();
 var deadLineController = TextEditingController();
 
 class RequestAndEditScreen extends StatelessWidget {
-  const RequestAndEditScreen({super.key});
+  RequestAndEditScreen({super.key});
+  DateTime? pickedDate;
+  User? user = FirebaseAuth.instance.currentUser;
+  void onSubmit(){
+    Request newRequest=Request(reasonController.text, dangerController.text, int.parse(fundsController.text)
+        , docsController.text, hospitalController.text, locationController.text, pickedDate!, patientId:"hZTgPOEhOgXiGa1EEdZhmKUlGE32" );//patientId:user!.uid
+    FirestoreInterface.addRequest(newRequest);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,11 +134,12 @@ class RequestAndEditScreen extends StatelessWidget {
                           FormFields(
                             controller: deadLineController,
                             type: TextInputType.datetime,
-                            hint: "DeadLine",
-                            label: "DeadLine",
+                            hint: "Deadline",
+                            label: "Deadline",
                             icon: Icons.date_range,
                             onTap: () async {
-                              DateTime? pickedDate = await showDatePicker(
+                              FocusScope.of(context).requestFocus(FocusNode()); // Prevent keyboard from appearing
+                              pickedDate = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime.now(),
@@ -136,29 +147,26 @@ class RequestAndEditScreen extends StatelessWidget {
                                 builder: (BuildContext context, Widget? child) {
                                   return Theme(
                                     data: ThemeData.light().copyWith(
-                                      primaryColor:
-                                          darkColor, // Color for selected dates
+                                      primaryColor: darkColor, // Color for selected dates
                                       colorScheme: ColorScheme.light(
-                                        primary:
-                                            deepOrange, // Header background color
-                                        onPrimary:
-                                            Colors.white, // Header text color
+                                        primary: deepOrange, // Header background color
+                                        onPrimary: Colors.white, // Header text color
                                         onSurface: darkColor, // Body text color
                                       ),
-                                      dialogBackgroundColor: Colors.blueGrey[
-                                          50], // Background color of the picker
+                                      dialogBackgroundColor: Colors.blueGrey[50], // Background color of the picker
                                     ),
                                     child: child!,
                                   );
                                 },
                               );
                               if (pickedDate != null) {
-                                deadLineController.text =
-                                    DateFormat.yMMMd().format(pickedDate);
-                                print(DateFormat.yMMMd().format(pickedDate));
+                                deadLineController.text = DateFormat.yMMMd().format(pickedDate!);
+                                print(DateFormat.yMMMd().format(pickedDate!));
                               }
                             },
+                            isDateField: true, // Custom flag to handle date fields
                           ),
+
                           const SizedBox(
                             height: 50,
                           ),
@@ -167,7 +175,7 @@ class RequestAndEditScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () =>onSubmit(),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: darkColor),
                                 child:  const Text(
@@ -193,16 +201,18 @@ class RequestAndEditScreen extends StatelessWidget {
   }
 }
 
-Widget FormFields(
-        {required TextEditingController controller,
-        required TextInputType type,
-        required String hint,
-        required String label,
-        required IconData icon,
-        bool isMultilineText = false,
-        double? hight,
-        int? maxLines,
-        Function? onTap}) =>
+Widget FormFields({
+  required TextEditingController controller,
+  required TextInputType type,
+  required String hint,
+  required String label,
+  required IconData icon,
+  bool isMultilineText = false,
+  bool isDateField = false, // New flag
+  double? hight,
+  int? maxLines,
+  Function? onTap,
+}) =>
     SizedBox(
       height: hight,
       child: TextField(
@@ -210,6 +220,8 @@ Widget FormFields(
         keyboardType: type,
         maxLines: maxLines,
         textAlignVertical: TextAlignVertical.top,
+        readOnly: isDateField, // Make read-only for date fields
+        onTap: isDateField ? () => onTap!() : null, // Trigger onTap only if date field
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
@@ -227,20 +239,20 @@ Widget FormFields(
           hintStyle: TextStyle(fontWeight: FontWeight.bold, color: darkColor),
           labelText: label,
           labelStyle:
-              const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           alignLabelWithHint: true,
           prefixIcon: isMultilineText
               ? Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
-                  child: Icon(
-                    icon,
-                    color: deepOrange,
-                  ),
-                )
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
+            child: Icon(
+              icon,
+              color: deepOrange,
+            ),
+          )
               : Icon(
-                  icon,
-                  color: deepOrange,
-                ),
+            icon,
+            color: deepOrange,
+          ),
         ),
       ),
     );
