@@ -1,3 +1,4 @@
+import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/components/requests_list/request_item.dart';
 import 'package:flutter/material.dart';
 
@@ -9,17 +10,24 @@ class RequestList extends StatefulWidget {
 }
 
 class _RequestListState extends State<RequestList> {
+  void initState() {
+    super.initState();
+    FirestoreInterface.init("9As0D631chVeNZrcGuBD60MJWiB2").then((_)=>setState(() {
+      
+    }));//uid
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 1,
-      itemBuilder: (ctx, index) => const RequestItem(
-        paitentImgUri: 'assets/images/avatar_placeholder.png',
+      itemCount: FirestoreInterface.allRequests.length,
+      itemBuilder: (ctx, index) => RequestItem(
+        paitentImgUri: FirestoreInterface.patients[index].imageUrl,
         paitentReason:
-            'but also the leap into electroni960s siandsiandsiandsiiandsiaandsiandsiandsiandsiandsiandsi Ipsum',
-        paitentName: 'Belal Salem',
-        amountNeeded: 500,
-        isCompleted: false,
+            FirestoreInterface.allRequests[index].reason,
+        paitentName: "${FirestoreInterface.patients[index].firstName} ${FirestoreInterface.patients[index].lastName}",
+        amountNeeded: FirestoreInterface.allRequests[index].funds,
+        isCompleted: FirestoreInterface.allRequests[index].requestCompleted,
       ),
     );
   }

@@ -39,7 +39,7 @@ class CharityUser {
   factory CharityUser.fromJson(Map<String, dynamic> json) {
     return CharityUser(
       email: json['email'],
-      userType: UserType.values.firstWhere((e) => e.name == json['userType']),
+      userType: UserType.values.firstWhere((e) => e.name == json['type']),
       firstName: json['firstName'],
       lastName: json['lastName'],
       phoneNumber: json['phoneNumber'],
