@@ -11,6 +11,7 @@ class RequestList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RequestsCubit, RequestsState>(builder: (ctx, state) {
       if (state is RequestsLoading) {
+        
         return const Center(child: CircularProgressIndicator());
       } else if (state is RequeststError) {
         return const Center(
@@ -18,17 +19,16 @@ class RequestList extends StatelessWidget {
         );
       } else if (state is RequestsLoaded) {
         return ListView.builder(
-            itemCount: state.requests.length,
+            itemCount: state.uncompletedRequsts.length,
             itemBuilder: (ctx, index) {
-              final singleRequest = state.requests[index];
+              final singleRequest = state.uncompletedRequsts[index];
+              if (singleRequest.requestCompleted) {
+                return const SizedBox.shrink();
+              }
 
               return RequestItem(
-                  paitentImgUri: singleRequest.paitent.imageUrl,
-                  paitentReason: singleRequest.reason,
-                  paitentName:
-                      "${singleRequest.paitent.firstName} ${singleRequest.paitent.lastName}",
-                  amountNeeded: singleRequest.funds,
-                  isCompleted: singleRequest.requestCompleted);
+                assignedRequest: singleRequest,
+              );
             });
       } else {
         return const Center(child: Text('No Requests Available.'));

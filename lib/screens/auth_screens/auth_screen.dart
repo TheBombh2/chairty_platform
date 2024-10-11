@@ -3,7 +3,7 @@ import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
 import 'package:chairty_platform/screens/donator_home_screen.dart';
-import 'package:chairty_platform/screens/profile_screen.dart';
+import 'package:chairty_platform/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -12,6 +12,8 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future<String> _getUserType(String uid) async {
+      AuthInterface.user = await FirestoreInterface.getUserById(
+          AuthInterface.getCurrentUser()!.uid);
       final document =
           await FirestoreInterface.getDocumentFromCollectionByUid('users', uid);
 
@@ -30,10 +32,10 @@ class AuthScreen extends StatelessWidget {
               if (userTypeSnapshot.hasData) {
                 userType = userTypeSnapshot.data!;
 
-                if (userType  == UserType.donator.name) {
+                if (userType == UserType.donator.name) {
                   return const DonatorHomeScreen();
                 } else {
-                  return const ProfileScreen();
+                  return const SettingsScreen();
                 }
               } else if (userTypeSnapshot.hasError) {
                 AuthInterface.firebaseInstance.signOut();

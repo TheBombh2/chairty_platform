@@ -1,3 +1,4 @@
+import 'package:chairty_platform/models/request.dart';
 import 'package:chairty_platform/screens/request_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,24 +7,19 @@ import 'package:neon_widgets/neon_widgets.dart';
 class RequestItem extends StatelessWidget {
   const RequestItem(
       {super.key,
-      required this.paitentImgUri,
-      required this.paitentName,
-      required this.amountNeeded,
-      required this.paitentReason,
-      required this.isCompleted});
-  final String paitentName;
-  final String paitentImgUri;
-  final String paitentReason;
-  final int amountNeeded;
-  final bool isCompleted;
+      required this.assignedRequest,
+      });
+      final Request assignedRequest;
+
 
   @override
   Widget build(BuildContext context) {
+    final paitent = assignedRequest.paitent;
     return NeonContainer(
       containerColor: const Color(0xffE2F1F2),
       borderColor: const Color(0xffE2F1F2),
       lightBlurRadius: 16,
-      spreadColor: isCompleted ? Colors.green : Colors.pink,
+      spreadColor: assignedRequest.requestCompleted ? Colors.green : Colors.pink,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       padding: const EdgeInsets.all(16),
       borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -32,10 +28,10 @@ class RequestItem extends StatelessWidget {
           Row(
             children: [
               Hero(
-                tag: paitentName,
+                tag: assignedRequest.patientId,
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundImage: NetworkImage(paitentImgUri),
+                  backgroundImage: NetworkImage(paitent.imageUrl),
                 ),
               ),
               const SizedBox(
@@ -43,7 +39,7 @@ class RequestItem extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  paitentName,
+                  paitent.firstName + paitent.lastName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.varelaRound(
@@ -66,7 +62,7 @@ class RequestItem extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    '$amountNeeded\$',
+                    '${assignedRequest.funds}\$',
                     style: GoogleFonts.varelaRound(
                         color: const Color(
                           0xff034956,
@@ -85,7 +81,7 @@ class RequestItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  paitentReason,
+                  assignedRequest.reason,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 5,
                   style: GoogleFonts.varelaRound(
@@ -110,7 +106,7 @@ class RequestItem extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (ctx) => RequestViewScreen(
-                        name: paitentName, age: '20', imageURI: paitentImgUri),
+                        request:assignedRequest),
                   ),
                 );
               },

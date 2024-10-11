@@ -12,6 +12,7 @@ class CharityUser {
     required this.phoneNumber,
     required this.dateOfBirth,
     required this.imageUrl,
+    required this.bio,
   });
 
   final String email;
@@ -22,6 +23,7 @@ class CharityUser {
   final Gender gender;
   final DateTime dateOfBirth;
   final String imageUrl;
+  final String bio;
 
   Map<String, dynamic> toJson() {
     return {
@@ -33,6 +35,7 @@ class CharityUser {
       'gender': gender.name, // 
       'dateOfBirth': dateOfBirth.toIso8601String(), 
       'imageUrl': imageUrl,
+      'bio':bio,
     };
   }
 
@@ -46,6 +49,7 @@ class CharityUser {
       gender: Gender.values.firstWhere((e) => e.name == json['gender']),
       dateOfBirth: DateTime.parse(json['dateOfBirth']),
       imageUrl: json['imageUrl'],
+      bio: json['bio'],
     );
   }
 }

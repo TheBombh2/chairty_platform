@@ -29,6 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String _selectedPhoneNumber = '';
   String _enteredEmail = '';
   String _enteredPassword = '';
+  String _enteredBio = '';
   bool _isAuthenticating = false;
 
   void _submit() async {
@@ -47,7 +48,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _enteredPassword,
         false,
       );
-      
 
       final userUid = AuthInterface.getCurrentUser()!.uid;
       final storageRef =
@@ -64,13 +64,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   gender: _selectedGender,
                   phoneNumber: _selectedPhoneNumber,
                   dateOfBirth: _selectedDateOfBirth!,
-                  imageUrl: imageUrl)
+                  imageUrl: imageUrl,
+                  bio: _enteredBio)
               .toJson());
 
       setState(() {
         _isAuthenticating = false;
       });
-     Navigator.of(context).pop();
+      Navigator.of(context).pop();
     } on FirebaseAuthException catch (error) {
       setState(() {
         _isAuthenticating = false;
@@ -80,8 +81,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(error.message ?? 'Authentication failed')));
     }
-
-
   }
 
   void _presentDatePicker() async {

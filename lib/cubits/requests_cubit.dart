@@ -10,12 +10,13 @@ class RequestsCubit extends Cubit<RequestsState> {
 
   void getRequests() async {
     emit(RequestsLoading());
-    List<Request> loadedRequests = [];
     try {
       FirestoreInterface.firebaseInstance
           .collection('requests')
           .snapshots()
           .listen((event) async {
+        List<Request> loadedRequests = [];
+
         for (var element in event.docs) {
           final request = Request.fromJson(element.data(), element.id);
           await request.initializePatient();

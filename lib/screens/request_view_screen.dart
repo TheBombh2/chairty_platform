@@ -2,29 +2,28 @@ import 'package:chairty_platform/components/request_details_view/details_section
 import 'package:chairty_platform/components/request_details_view/documents_list_section.dart';
 import 'package:chairty_platform/components/request_details_view/donate_section.dart';
 import 'package:chairty_platform/components/request_details_view/hospital_secion/hospital_details_secion.dart';
+import 'package:chairty_platform/models/request.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RequestViewScreen extends StatelessWidget {
   const RequestViewScreen({
-    required this.name,
-    required this.age,
-    required this.imageURI,
     super.key,
+    required this.request
   });
-  final String name;
-  final String age;
-  final String imageURI;
+  final Request request;
+
 
   @override
   Widget build(BuildContext context) {
+    final paitent = request.paitent;
     return Scaffold(
       backgroundColor: const Color(0xFFF6FAF7),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          "Donate to $name",
+          "Donate to ${paitent.firstName + paitent.lastName}",
           style: GoogleFonts.varelaRound(
             color: const Color(
               0xffE2F1F2,
@@ -43,11 +42,11 @@ class RequestViewScreen extends StatelessWidget {
                 height: 16,
               ),
               Hero(
-                tag: name,
+                tag: request.patientId,
                 child:  CircleAvatar(
                   radius: 80,
                   backgroundImage:
-                      AssetImage(imageURI),
+                      NetworkImage(paitent.imageUrl),
                 ),
               ),
               const SizedBox(
@@ -58,7 +57,7 @@ class RequestViewScreen extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                      name,
+                      paitent.firstName + paitent.lastName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.varelaRound(
@@ -73,7 +72,7 @@ class RequestViewScreen extends StatelessWidget {
                     flex: 2,
                     child: Text(
                       textAlign: TextAlign.end,
-                      '$age y.o',
+                      '${DateTime.now().year - paitent.dateOfBirth.year} y.o',
                       style: GoogleFonts.varelaRound(
                           color: const Color(
                             0xff034956,
@@ -87,19 +86,19 @@ class RequestViewScreen extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              const DetailsSection(
+               DetailsSection(
                 title: 'Why do I need the donation',
                 body:
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                    request.reason,
                 backgroundColor: Color.fromARGB(255, 247, 224, 157),
               ),
               const SizedBox(
                 height: 16,
               ),
-              const DetailsSection(
+               DetailsSection(
                 title: 'The danger that may affect me',
                 body:
-                    'Lorem Ipsum is simply dummy text of the printing and typesettintypesettingtypesettingtypesettingtypesettingtypesettingtypesettingtypesettingtypesettingtypesettinggtypesettingtypesettingtypesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+                    request.danger,
                 backgroundColor: Color.fromARGB(255, 250, 122, 165),
               ),
               const SizedBox(

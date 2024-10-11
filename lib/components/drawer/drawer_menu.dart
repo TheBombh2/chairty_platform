@@ -1,5 +1,8 @@
+import 'package:chairty_platform/Firebase/auth_interface.dart';
+import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/components/drawer/drawer_list_tile.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
+import 'package:chairty_platform/screens/request_history_screen.dart';
 import 'package:chairty_platform/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,10 +29,10 @@ class DrawerMenu extends StatelessWidget {
               width: double.infinity,
               child: Column(
                 children: [
-                  const CircleAvatar(
+                   CircleAvatar(
                     radius: 45,
                     backgroundImage:
-                        AssetImage('assets/images/avatar_placeholder.png'),
+                        NetworkImage(AuthInterface.getCurrentCharityUser().imageUrl),
                   ),
                   const SizedBox(
                     height: 8,
@@ -54,26 +57,28 @@ class DrawerMenu extends StatelessWidget {
             tileIcon: Icons.person_outline,
             onTileClicked: () {
               Navigator.of(context).pop();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => const ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (ctx) => ProfileScreen(
+                        user: AuthInterface.getCurrentCharityUser(),
+                      )));
             },
           ),
           DrawerListTile(
             tileText: 'History',
             tileIcon: Icons.history,
             onTileClicked: () {
-                Navigator.of(context).pop();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => const ProfileScreen()));
+              Navigator.of(context).pop();
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (ctx) => const RequestHistoryScreen()));
             },
           ),
           DrawerListTile(
             tileText: 'Settings',
             tileIcon: Icons.settings,
             onTileClicked: () {
-                Navigator.of(context).pop();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
             },
           ),
         ],
