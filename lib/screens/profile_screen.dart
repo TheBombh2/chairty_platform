@@ -15,10 +15,10 @@ class ProfileScreen extends StatelessWidget {
           "My Account",
           style: TextStyle(color: Colors.white), // Set the title color to white
         ),
-        backgroundColor: Color(0xFF034956), // AppBar color from the palette
+        backgroundColor: const Color(0xFF034956), // AppBar color from the palette
       ),
       body: Container(
-        color: Color(0xFFF6FAF7), // Background color from the palette
+        color: const Color(0xFFF6FAF7), // Background color from the palette
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -65,9 +65,9 @@ class ProfileScreen extends StatelessWidget {
 
                       // User Details
                       
-                      _buildDetailRow(Icons.person, "Gender: ${user.gender}"),
+                      _buildDetailRow(Icons.person, "Gender: ${user.gender.name[0].toUpperCase() + user.gender.name.substring(1)}"),
                       _buildDetailRow(
-                          Icons.calendar_today, "Date of Birth: ${user.dateOfBirth}"),
+                          Icons.calendar_today, "Date of Birth: ${user.dateOfBirth.day}/${user.dateOfBirth.month}/${user.dateOfBirth.year}"),
                       _buildDetailRow(Icons.phone, "Phone: ${user.phoneNumber}"),
                       _buildDetailRow(Icons.email, "E-mail: ${user.email}"),
                       const SizedBox(height: 10),
@@ -105,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
-                      Color(0xFF034956), // Button color from the palette
+                      const Color(0xFF034956), // Button color from the palette
                   padding:
                       const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   shape: RoundedRectangleBorder(
@@ -131,13 +131,13 @@ class ProfileScreen extends StatelessWidget {
     return Row(
       children: [
         Icon(icon,
-            color: Color(0xFFF26722)), // Updated icon color to match the button
+            color: const Color(0xFFF26722)), // Updated icon color to match the button
         const SizedBox(width: 10),
         Expanded(
           child: Text(
             text,
             style: const TextStyle(
-                fontSize: 24, color: Colors.black), // Increased text size
+                fontSize: 16, color: Colors.black), // Increased text size
           ),
         ),
       ],
