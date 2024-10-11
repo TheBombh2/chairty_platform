@@ -10,12 +10,14 @@ class RequestsLoading extends RequestsState {}
 
 class RequestsLoaded extends RequestsState {
   final List<Request> requests;
-  List<Request> uncompletedRequsts = [];
+  final List<Request> completedRequests;
+  final List<Request> uncompletedRequsts;
 
-  RequestsLoaded({required this.requests}) {
-    uncompletedRequsts =
-        requests.where((ele) => !ele.requestCompleted).toList();
-  }
+  RequestsLoaded({
+    required this.requests,
+    required this.completedRequests,
+    required this.uncompletedRequsts,
+  });
 }
 
 class RequeststError extends RequestsState {

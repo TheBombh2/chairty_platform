@@ -16,14 +16,25 @@ class RequestsCubit extends Cubit<RequestsState> {
           .snapshots()
           .listen((event) async {
         List<Request> loadedRequests = [];
+        List<Request> completedRequests = [];
+        List<Request> uncompletedRequsts = [];
 
         for (var element in event.docs) {
           final request = Request.fromJson(element.data(), element.id);
           await request.initializePatient();
           loadedRequests.add(request);
+          if (request.requestCompleted) {
+            completedRequests.add(request);
+          } else {
+            uncompletedRequsts.add(request);
+          }
         }
 
-        emit(RequestsLoaded(requests: loadedRequests));
+        emit(RequestsLoaded(
+          requests: loadedRequests,
+          completedRequests: completedRequests,
+          uncompletedRequsts: uncompletedRequsts,
+        ));
       });
     } catch (error) {
       emit(RequeststError(message: error.toString()));
