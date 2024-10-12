@@ -28,8 +28,8 @@ class Request {
     required this.hospitalLocation,
     required this.deadline,
     this.requestCompleted = false,
+    this.requestId,
     donaitorID,
-    requestID,
   });
 
   Future<void> initializePatient() async {
@@ -70,7 +70,7 @@ class Request {
       hospitalName: json['hospitalName'],
       hospitalLocation: PlaceLocation.fromJson(json['hospitalLocation']),
       deadline: (json['deadline'] as Timestamp).toDate(),
-      requestID: docId,
+      requestId: docId,
       donaitorID: json['donaterId'],
       requestCompleted: json['requestCompleted'] as bool,
     );

@@ -40,7 +40,7 @@ class RequestViewScreen extends StatelessWidget {
                 height: 16,
               ),
               Hero(
-                tag: request.patientId,
+                tag: request.requestId!,
                 child: CircleAvatar(
                   radius: 80,
                   backgroundImage: NetworkImage(paitent.imageUrl),

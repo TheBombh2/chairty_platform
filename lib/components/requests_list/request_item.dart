@@ -28,7 +28,7 @@ class RequestItem extends StatelessWidget {
           Row(
             children: [
               Hero(
-                tag: assignedRequest.patientId,
+                tag: assignedRequest.requestId!,
                 child: CircleAvatar(
                   radius: 30,
                   backgroundImage: NetworkImage(paitent.imageUrl),

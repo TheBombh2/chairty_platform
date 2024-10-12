@@ -26,14 +26,16 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     final message = await AuthInterface.authinticateWithEmailAndPassword(
         _enteredEmail, _enteredPassword, true);
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
+    if (mounted) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+          ),
         ),
-      ),
-    );
+      );
+    }
     setState(() {
       _isAuthenticating = false;
     });
