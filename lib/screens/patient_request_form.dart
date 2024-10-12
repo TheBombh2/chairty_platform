@@ -1,13 +1,13 @@
+import 'package:chairty_platform/screens/patient_home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/request.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'package:intl/intl.dart';
+import '../components/style.dart';
+import '../components/style.dart';
 
-Color darkColor = HexColor("#034956");
-Color lightColor = HexColor("#E2F1F2");
-Color deepOrange = HexColor("#F26722");
+
 
 var idController = TextEditingController();
 var reasonController = TextEditingController();
@@ -175,7 +175,13 @@ class RequestAndEditScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               ElevatedButton(
-                                onPressed: () =>onSubmit(),
+                                onPressed: () {
+                                  
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(builder: (context) => PatientHomeScreen()),
+                                        (Route<dynamic> route) => false,
+                                  );
+                                },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: darkColor),
                                 child:  const Text(

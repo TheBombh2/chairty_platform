@@ -1,5 +1,9 @@
+import 'package:chairty_platform/screens/donator_home_screen.dart';
+import 'package:chairty_platform/screens/patient_request_form.dart';
 import 'package:chairty_platform/cubits/requests_cubit.dart';
 import 'package:chairty_platform/screens/auth_screens/auth_screen.dart';
+import 'package:chairty_platform/screens/patient_home_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +24,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:BlocProvider(create: (context)=> RequestsCubit(),
+      home: BlocProvider(create: (context)=> RequestsCubit(),
       child: const AuthScreen(),),
+      routes: {
+        '/PatientRequest': (context) => RequestAndEditScreen(),
+        '/PatientHome': (context) => const PatientHomeScreen(),
+      },
     );
   }
 }
