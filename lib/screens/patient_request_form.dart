@@ -4,34 +4,27 @@ import 'package:chairty_platform/components/google_map/location_input.dart';
 import 'package:chairty_platform/components/medical_docs_field/medical_docs_field.dart';
 import 'package:chairty_platform/models/document.dart';
 import 'package:chairty_platform/models/place.dart';
-import 'package:chairty_platform/screens/patient_home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/request.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:location/location.dart';
 import '../components/style.dart';
 
-var idController = TextEditingController();
-var reasonController = TextEditingController();
-var dangerController = TextEditingController();
-var fundsController = TextEditingController();
-var docsController = TextEditingController();
-var hospitalNameController = TextEditingController();
-var locationController = TextEditingController();
-var deadLineController = TextEditingController();
-final List<Document> uploadedMedicalDocuments = [];
-
 class RequestAndEditScreen extends StatefulWidget {
-  RequestAndEditScreen({super.key});
+  const RequestAndEditScreen({super.key});
 
   @override
   State<RequestAndEditScreen> createState() => _RequestAndEditScreenState();
 }
 
 class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
+  var reasonController = TextEditingController();
+  var dangerController = TextEditingController();
+  var fundsController = TextEditingController();
+  var hospitalNameController = TextEditingController();
+  var deadLineController = TextEditingController();
+  final List<Document> uploadedMedicalDocuments = [];
   DateTime? pickedDate;
 
   User? user = FirebaseAuth.instance.currentUser;
@@ -64,7 +57,18 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Request Uploaded Successfully.')));
+    uploadedMedicalDocuments.clear();
     Navigator.of(context).pop();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    reasonController.dispose();
+    dangerController.dispose();
+    fundsController.dispose();
+    hospitalNameController.dispose();
+    deadLineController.dispose();
   }
 
   @override

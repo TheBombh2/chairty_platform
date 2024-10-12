@@ -65,8 +65,7 @@ class FirestoreInterface {
   }
 
   static Future<void> uploadRequest(Map<String, dynamic> data) async {
-    DocumentReference docRef =
-        await firebaseInstance.collection('requests').add(data);
+    await firebaseInstance.collection('requests').add(data);
   }
 
   static Future<void> deleteRequest(String requestId) async {
