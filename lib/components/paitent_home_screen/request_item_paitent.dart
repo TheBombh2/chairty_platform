@@ -62,6 +62,7 @@ class RequestItemPaitent extends StatelessWidget {
                           Text(
                             "Title : ${request.reason}",
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             style: TextStyle(
                               color: darkColor,
                               fontSize: 20,
@@ -70,6 +71,7 @@ class RequestItemPaitent extends StatelessWidget {
                           Text(
                             "Description : ${request.danger}",
                             overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                             style: TextStyle(
                               color: Colors.grey.shade700,
                               fontSize: 20,

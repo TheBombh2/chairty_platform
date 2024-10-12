@@ -30,10 +30,72 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
   User? user = FirebaseAuth.instance.currentUser;
 
   PlaceLocation? _selectedHospitalLocation;
+  final _formKey = GlobalKey<FormState>();
 
   bool isUploading = false;
 
   void onSubmit() async {
+    bool isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    if (uploadedMedicalDocuments.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You must at least upload one medical report.'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: (const Text('OK')))
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+    if (_selectedHospitalLocation == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You must select hospital location.'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: (const Text('OK')))
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+    if (pickedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You must select deadline date of your request'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: (const Text('OK')))
+            ],
+          ),
+        ),
+      );
+      return;
+    }
     Request newRequest = Request(
       patientId: AuthInterface.getCurrentUser()!.uid,
       reason: reasonController.text,
@@ -94,6 +156,7 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(color: lightColor),
                 child: Form(
+                  key: _formKey,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 20),
@@ -112,6 +175,14 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
                             label: "Why do you need help?",
                             icon: Icons.question_mark_outlined,
                             isMultilineText: true,
+                            onValidate: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 100) {
+                                return 'Reason must be at least 100 characters';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -124,6 +195,14 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
                             label: "What is the danger?",
                             icon: Icons.dangerous,
                             isMultilineText: true,
+                            onValidate: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 100) {
+                                return 'Danger must be at least 100 characters';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -134,6 +213,13 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
                             hint: "Funds",
                             label: "Funds",
                             icon: Icons.money,
+                            onValidate: (value) {
+                              final number = int.tryParse(value!);
+                              if (number == null || number <= 0) {
+                                return 'Enter a valid number';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -150,6 +236,14 @@ class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
                             hint: "Hospital",
                             label: "Hospital Name",
                             icon: Icons.location_city,
+                            onValidate: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 5) {
+                                return 'Hospital name must be at least 5 characters';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -236,6 +330,7 @@ Widget FormFields({
   required String hint,
   required String label,
   required IconData icon,
+  String? Function(String?)? onValidate,
   bool isMultilineText = false,
   bool isDateField = false, // New flag
   double? hight,
@@ -244,12 +339,13 @@ Widget FormFields({
 }) =>
     SizedBox(
       height: hight,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         keyboardType: type,
         maxLines: maxLines,
         textAlignVertical: TextAlignVertical.top,
         readOnly: isDateField, // Make read-only for date fields
+        validator: onValidate,
         onTap: isDateField
             ? () => onTap!()
             : null, // Trigger onTap only if date field
@@ -261,11 +357,26 @@ Widget FormFields({
                 width: 2,
               )),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: BorderSide(
-                color: deepOrange,
-                width: 2,
-              )),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              color: deepOrange,
+              width: 2,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+          ),
           hintText: hint,
           hintStyle: TextStyle(fontWeight: FontWeight.bold, color: darkColor),
           labelText: label,
