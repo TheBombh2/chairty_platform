@@ -62,8 +62,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
 
       final pickedImage = await ImagePicker().pickImage(
         source: useCamera! ? ImageSource.camera : ImageSource.gallery,
-        imageQuality: 50,
-        maxWidth: 150,
+        imageQuality: 100,
       );
       setState(() {
         disablePickImage = false;

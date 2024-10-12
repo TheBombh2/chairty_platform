@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:photo_view/photo_view.dart';
 
 class DocumentView extends StatelessWidget {
-  final File documentImage;
+  final File? documentImage;
+  final String? documentUrl;
   final String documentName;
   const DocumentView({
     required this.documentName,
-    required this.documentImage,
+    this.documentImage,
+    this.documentUrl,
     super.key,
   });
 
@@ -28,7 +30,12 @@ class DocumentView extends StatelessWidget {
         centerTitle: true,
         backgroundColor: const Color(0xff034956),
       ),
-      body: PhotoView(imageProvider: FileImage(documentImage)),
+      body: PhotoView(
+          imageProvider: (documentImage != null)
+              ? FileImage(documentImage!)
+              : (documentUrl != null)
+                  ? NetworkImage(documentUrl!)
+                  : null),
     );
   }
 }

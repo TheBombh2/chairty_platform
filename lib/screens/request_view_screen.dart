@@ -1,3 +1,4 @@
+import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/components/request_details_view/details_section.dart';
 import 'package:chairty_platform/components/request_details_view/documents_list_section.dart';
 import 'package:chairty_platform/components/request_details_view/donate_section.dart';
@@ -8,12 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RequestViewScreen extends StatelessWidget {
-  const RequestViewScreen({
-    super.key,
-    required this.request
-  });
+  const RequestViewScreen({super.key, required this.request});
   final Request request;
-
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +20,9 @@ class RequestViewScreen extends StatelessWidget {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          "Donate to ${paitent.firstName + paitent.lastName}",
+          request.patientId == AuthInterface.getCurrentUser()!.uid
+              ? 'Your Post'
+              : "Donate to ${paitent.firstName + paitent.lastName}",
           style: GoogleFonts.varelaRound(
             color: const Color(
               0xffE2F1F2,
@@ -43,10 +42,9 @@ class RequestViewScreen extends StatelessWidget {
               ),
               Hero(
                 tag: request.patientId,
-                child:  CircleAvatar(
+                child: CircleAvatar(
                   radius: 80,
-                  backgroundImage:
-                      NetworkImage(paitent.imageUrl),
+                  backgroundImage: NetworkImage(paitent.imageUrl),
                 ),
               ),
               const SizedBox(
@@ -86,44 +84,41 @@ class RequestViewScreen extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-               DetailsSection(
+              DetailsSection(
                 title: 'Why do I need the donation',
-                body:
-                    request.reason,
+                body: request.reason,
                 backgroundColor: Color.fromARGB(255, 247, 224, 157),
               ),
               const SizedBox(
                 height: 16,
               ),
-               DetailsSection(
+              DetailsSection(
                 title: 'The danger that may affect me',
-                body:
-                    request.danger,
+                body: request.danger,
                 backgroundColor: Color.fromARGB(255, 250, 122, 165),
               ),
               const SizedBox(
                 height: 16,
               ),
-              const DocumentsListSection(
-                documents: [
-                  'Medical Report 1',
-                  'Medical Report 2',
-                  'Medical Report 3',
-                ],
+              DocumentsListSection(
+                documents: request.medicalDocuments,
               ),
               const SizedBox(
                 height: 16,
               ),
-              const HospitalDetailsSecion(
-                hospitalName: 'Al amoma',
-                hospitalLocation: LatLng(31.13567354055204, 30.64803319513834),
+               HospitalDetailsSecion(
+                hospitalName: request.hospitalName,
+                hospitalLocation: request.hospitalLocation,
               ),
               const SizedBox(
                 height: 16,
               ),
-              const DonateSection(
-                amountNeeded: 500,
-              ),
+              (request.patientId == AuthInterface.getCurrentUser()!.uid) ||
+                      (request.requestCompleted)
+                  ? const SizedBox.shrink()
+                  : const DonateSection(
+                      amountNeeded: 500,
+                    ),
               const SizedBox(
                 height: 24,
               )
