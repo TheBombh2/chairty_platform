@@ -13,7 +13,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _enteredEmail = '';
   String _enteredPassword = '';
-  var _isAuthenticating = false;
+  bool _isAuthenticating = false;
+  bool _isPasswordVisible = false;
 
   void _submit() async {
     final isValid = _formKey.currentState!.validate();
@@ -26,16 +27,17 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     final message = await AuthInterface.authinticateWithEmailAndPassword(
         _enteredEmail, _enteredPassword, true);
-    if (mounted) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            message,
-          ),
-        ),
-      );
+    if (!mounted) {
+      return;
     }
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+        ),
+      ),
+    );
     setState(() {
       _isAuthenticating = false;
     });
@@ -44,17 +46,41 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF6FAF7),
       body: Center(
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Login',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        color: Color(0xFFF26722)),
+                  ),
+                  const SizedBox(height: 25),
+                  const Text(
+                    'Hello, welcome back',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Color(0xFF034956),
+                    ),
+                  ),
+                  const SizedBox(height: 50),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xFFE2F1F2),
+                      labelText: 'Enter your email',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -66,12 +92,30 @@ class _LoginScreenState extends State<LoginScreen> {
                       _enteredEmail = newValue!;
                     },
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
+                  const SizedBox(height: 20),
+                  TextFormField(
+                    autocorrect: false,
+                    obscureText: !_isPasswordVisible,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: const Color(0xFFE2F1F2),
+                      labelText: 'Enter your password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                      ),
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty || value.length < 6) {
@@ -83,29 +127,60 @@ class _LoginScreenState extends State<LoginScreen> {
                       _enteredPassword = newValue!;
                     },
                   ),
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (_isAuthenticating)
-                      const CircularProgressIndicator()
-                    else
-                      ElevatedButton(onPressed: _submit, child: Text('Login')),
-                    TextButton(
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFF26722),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: _isAuthenticating ? null : _submit,
+                      child: _isAuthenticating
+                          ? const CircularProgressIndicator()
+                          : const Text(
+                              'Login',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                              ),
+                            ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an account?",
+                        style: TextStyle(
+                          color: Color(0xFF034956),
+                        ),
+                      ),
+                      TextButton(
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (ctx) => RegisterScreen(),
+                              builder: (ctx) => const RegisterScreen(),
                             ),
                           );
                         },
-                        child: Text('Dont have an account?'))
-                  ],
-                ),
-              ],
+                        child: const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            color: Color(0xFFF26722),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
