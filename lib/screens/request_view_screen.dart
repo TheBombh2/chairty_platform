@@ -6,7 +6,6 @@ import 'package:chairty_platform/components/request_details_view/hospital_secion
 import 'package:chairty_platform/models/request.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RequestViewScreen extends StatelessWidget {
   const RequestViewScreen({super.key, required this.request});
@@ -87,7 +86,7 @@ class RequestViewScreen extends StatelessWidget {
               DetailsSection(
                 title: 'Why do I need the donation',
                 body: request.reason,
-                backgroundColor: Color.fromARGB(255, 247, 224, 157),
+                backgroundColor: const Color.fromARGB(255, 247, 224, 157),
               ),
               const SizedBox(
                 height: 16,
@@ -95,7 +94,7 @@ class RequestViewScreen extends StatelessWidget {
               DetailsSection(
                 title: 'The danger that may affect me',
                 body: request.danger,
-                backgroundColor: Color.fromARGB(255, 250, 122, 165),
+                backgroundColor: const Color.fromARGB(255, 250, 122, 165),
               ),
               const SizedBox(
                 height: 16,
