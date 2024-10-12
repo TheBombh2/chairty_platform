@@ -3,7 +3,7 @@ import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
 import 'package:chairty_platform/screens/donator_home_screen.dart';
-import 'package:chairty_platform/screens/settings_screen.dart';
+import 'package:chairty_platform/screens/patient_home_screen.dart';
 import 'package:flutter/material.dart';
 
 class AuthScreen extends StatelessWidget {
@@ -35,7 +35,7 @@ class AuthScreen extends StatelessWidget {
                 if (userType == UserType.donator.name) {
                   return const DonatorHomeScreen();
                 } else {
-                  return const SettingsScreen();
+                  return const PatientHomeScreen();
                 }
               } else if (userTypeSnapshot.hasError) {
                 AuthInterface.firebaseInstance.signOut();

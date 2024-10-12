@@ -1,5 +1,4 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
-import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/components/drawer/drawer_list_tile.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
 import 'package:chairty_platform/screens/request_history_screen.dart';
@@ -8,7 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DrawerMenu extends StatelessWidget {
-  const DrawerMenu({super.key});
+  final bool showHistory;
+  const DrawerMenu({
+    this.showHistory = true,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +32,10 @@ class DrawerMenu extends StatelessWidget {
               width: double.infinity,
               child: Column(
                 children: [
-                   CircleAvatar(
+                  CircleAvatar(
                     radius: 45,
-                    backgroundImage:
-                        NetworkImage(AuthInterface.getCurrentCharityUser().imageUrl),
+                    backgroundImage: NetworkImage(
+                        AuthInterface.getCurrentCharityUser().imageUrl),
                   ),
                   const SizedBox(
                     height: 8,
@@ -63,6 +66,7 @@ class DrawerMenu extends StatelessWidget {
                       )));
             },
           ),
+          if(showHistory)
           DrawerListTile(
             tileText: 'History',
             tileIcon: Icons.history,

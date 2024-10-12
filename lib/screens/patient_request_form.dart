@@ -1,13 +1,16 @@
+import 'package:chairty_platform/Firebase/auth_interface.dart';
+import 'package:chairty_platform/components/google_map/location_input.dart';
+import 'package:chairty_platform/components/medical_docs_field/medical_docs_field.dart';
+import 'package:chairty_platform/models/place.dart';
 import 'package:chairty_platform/screens/patient_home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/request.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:location/location.dart';
 import '../components/style.dart';
-import '../components/style.dart';
-
-
 
 var idController = TextEditingController();
 var reasonController = TextEditingController();
@@ -22,29 +25,38 @@ class RequestAndEditScreen extends StatelessWidget {
   RequestAndEditScreen({super.key});
   DateTime? pickedDate;
   User? user = FirebaseAuth.instance.currentUser;
-  void onSubmit(){
-    Request newRequest=Request(reasonController.text, dangerController.text, int.parse(fundsController.text)
-        , docsController.text, hospitalController.text, locationController.text, pickedDate!, patientId:"hZTgPOEhOgXiGa1EEdZhmKUlGE32" );//patientId:user!.uid
+  PlaceLocation? _selectedLocation;
+  void onSubmit() {
+    Request newRequest = Request(
+        reasonController.text,
+        dangerController.text,
+        int.parse(fundsController.text),
+        docsController.text,
+        hospitalController.text,
+        locationController.text,
+        pickedDate!,
+        patientId: AuthInterface.getCurrentUser()!.uid); //patientId:user!.uid
     FirestoreInterface.addRequest(newRequest);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Scaffold(
-            body: Column(
+        appBar: AppBar(
+          title: Text(
+            "Fill Request Form",
+            style: GoogleFonts.varelaRound(
+              color: const Color(
+                0xffE2F1F2,
+              ),
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: const Color(0xff034956),
+        ),
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Your Request",
-              style: TextStyle(
-                  color: darkColor, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -59,20 +71,11 @@ class RequestAndEditScreen extends StatelessWidget {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           FormFields(
-                              controller: idController,
-                              type: TextInputType.number,
-                              hint: "Owner ID",
-                              label: "Owner ID",
-                              icon: Icons.person),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          FormFields(
                             controller: reasonController,
                             type: TextInputType.multiline,
                             maxLines: 6,
                             hint: "Reason",
-                            label: "Your Reason",
+                            label: "Why do you need help?",
                             icon: Icons.question_mark_outlined,
                             isMultilineText: true,
                           ),
@@ -84,7 +87,7 @@ class RequestAndEditScreen extends StatelessWidget {
                             type: TextInputType.multiline,
                             maxLines: 6,
                             hint: "Danger",
-                            label: "Danger",
+                            label: "What is the danger?",
                             icon: Icons.dangerous,
                             isMultilineText: true,
                           ),
@@ -101,13 +104,7 @@ class RequestAndEditScreen extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          FormFields(
-                            controller: docsController,
-                            type: TextInputType.text,
-                            hint: "DOCs",
-                            label: "Your Medical DOCs Link",
-                            icon: Icons.picture_as_pdf,
-                          ),
+                          MedicalDocsField(),
                           const SizedBox(
                             height: 20,
                           ),
@@ -121,13 +118,9 @@ class RequestAndEditScreen extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          FormFields(
-                            controller: locationController,
-                            type: TextInputType.text,
-                            hint: "Location",
-                            label: "Hospital Location",
-                            icon: Icons.location_on_rounded,
-                          ),
+                          LocationInput(onSelectLocation: (location) {
+                            _selectedLocation = location;
+                          }),
                           const SizedBox(
                             height: 20,
                           ),
@@ -138,7 +131,8 @@ class RequestAndEditScreen extends StatelessWidget {
                             label: "Deadline",
                             icon: Icons.date_range,
                             onTap: () async {
-                              FocusScope.of(context).requestFocus(FocusNode()); // Prevent keyboard from appearing
+                              FocusScope.of(context).requestFocus(
+                                  FocusNode()); // Prevent keyboard from appearing
                               pickedDate = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
@@ -147,26 +141,31 @@ class RequestAndEditScreen extends StatelessWidget {
                                 builder: (BuildContext context, Widget? child) {
                                   return Theme(
                                     data: ThemeData.light().copyWith(
-                                      primaryColor: darkColor, // Color for selected dates
+                                      primaryColor:
+                                          darkColor, // Color for selected dates
                                       colorScheme: ColorScheme.light(
-                                        primary: deepOrange, // Header background color
-                                        onPrimary: Colors.white, // Header text color
+                                        primary:
+                                            deepOrange, // Header background color
+                                        onPrimary:
+                                            Colors.white, // Header text color
                                         onSurface: darkColor, // Body text color
                                       ),
-                                      dialogBackgroundColor: Colors.blueGrey[50], // Background color of the picker
+                                      dialogBackgroundColor: Colors.blueGrey[
+                                          50], // Background color of the picker
                                     ),
                                     child: child!,
                                   );
                                 },
                               );
                               if (pickedDate != null) {
-                                deadLineController.text = DateFormat.yMMMd().format(pickedDate!);
+                                deadLineController.text =
+                                    DateFormat.yMMMd().format(pickedDate!);
                                 print(DateFormat.yMMMd().format(pickedDate!));
                               }
                             },
-                            isDateField: true, // Custom flag to handle date fields
+                            isDateField:
+                                true, // Custom flag to handle date fields
                           ),
-
                           const SizedBox(
                             height: 50,
                           ),
@@ -176,15 +175,16 @@ class RequestAndEditScreen extends StatelessWidget {
                             children: [
                               ElevatedButton(
                                 onPressed: () {
-                                  
                                   Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (context) => PatientHomeScreen()),
-                                        (Route<dynamic> route) => false,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const PatientHomeScreen()),
+                                    (Route<dynamic> route) => false,
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: darkColor),
-                                child:  const Text(
+                                child: const Text(
                                   "Submit",
                                   style: TextStyle(
                                       color: Colors.white,
@@ -201,9 +201,7 @@ class RequestAndEditScreen extends StatelessWidget {
               ),
             ),
           ],
-        )),
-      ),
-    );
+        ));
   }
 }
 
@@ -227,7 +225,9 @@ Widget FormFields({
         maxLines: maxLines,
         textAlignVertical: TextAlignVertical.top,
         readOnly: isDateField, // Make read-only for date fields
-        onTap: isDateField ? () => onTap!() : null, // Trigger onTap only if date field
+        onTap: isDateField
+            ? () => onTap!()
+            : null, // Trigger onTap only if date field
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
@@ -245,20 +245,20 @@ Widget FormFields({
           hintStyle: TextStyle(fontWeight: FontWeight.bold, color: darkColor),
           labelText: label,
           labelStyle:
-          const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
           alignLabelWithHint: true,
           prefixIcon: isMultilineText
               ? Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
-            child: Icon(
-              icon,
-              color: deepOrange,
-            ),
-          )
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 120),
+                  child: Icon(
+                    icon,
+                    color: deepOrange,
+                  ),
+                )
               : Icon(
-            icon,
-            color: deepOrange,
-          ),
+                  icon,
+                  color: deepOrange,
+                ),
         ),
       ),
     );
