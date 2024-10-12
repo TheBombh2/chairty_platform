@@ -22,7 +22,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
   Widget build(BuildContext context) {
     bool disablePickImage = false;
 
-    void _pickImage() async {
+    void pickImage() async {
       bool? useCamera;
 
       await showDialog(
@@ -35,7 +35,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
                 child: ElevatedButton(
                   onPressed: () {
                     useCamera = true;
-                    Navigator.of(context).pop();
+                    Navigator.of(ctx).pop();
                   },
                   child: const Text('Camera'),
                 ),
@@ -44,7 +44,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
                 child: ElevatedButton(
                   onPressed: () {
                     useCamera = false;
-                    Navigator.of(context).pop();
+                    Navigator.of(ctx).pop();
                   },
                   child: const Text('Gallery'),
                 ),
@@ -85,7 +85,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(ctx).pop();
                   },
                   child: const Text('Add'))
             ],
@@ -95,6 +95,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
       if (docName == null || docName!.isEmpty) {
         return;
       }
+
       setState(() {
         widget.uploadedDocuments.add(
           Document(
@@ -122,7 +123,7 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
                 style: TextStyle(fontWeight: FontWeight.bold)),
             iconColor: deepOrange,
             trailing: IconButton(
-              onPressed: disablePickImage ? null : _pickImage,
+              onPressed: disablePickImage ? null : pickImage,
               icon: const Icon(
                 Icons.add_a_photo,
               ),

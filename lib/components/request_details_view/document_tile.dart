@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chairty_platform/components/medical_docs_field/document_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

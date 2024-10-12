@@ -19,7 +19,7 @@ class HospitalDetailsSecion extends StatefulWidget {
 class _HospitalDetailsSecionState extends State<HospitalDetailsSecion> {
   String get locationImage {
     final lat = widget.hospitalLocation.latitude;
-    final lng = widget.hospitalLocation!.longitude;
+    final lng = widget.hospitalLocation.longitude;
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=1000x700&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyDxPozXL_FEyJ0tHTz945Ox1Hllw8RGvdg';
   }
 
