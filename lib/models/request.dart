@@ -15,7 +15,7 @@ class Request {
   final String hospitalName;
   final PlaceLocation hospitalLocation;
   final DateTime deadline;
-  bool requestCompleted = false;
+  bool requestCompleted;
   late CharityUser paitent;
 
   Request({
@@ -27,7 +27,7 @@ class Request {
     required this.hospitalName,
     required this.hospitalLocation,
     required this.deadline,
-    requestCompleted,
+    this.requestCompleted = false,
     donaitorID,
     requestID,
   });
@@ -72,7 +72,7 @@ class Request {
       deadline: (json['deadline'] as Timestamp).toDate(),
       requestID: docId,
       donaitorID: json['donaterId'],
-      requestCompleted: json['requestCompleted'] ?? false,
+      requestCompleted: json['requestCompleted'] as bool,
     );
   }
 }
