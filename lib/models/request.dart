@@ -1,4 +1,6 @@
 import 'package:chairty_platform/Firebase/fire_store.dart';
+import 'package:chairty_platform/models/document.dart';
+import 'package:chairty_platform/models/place.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,31 +11,36 @@ class Request {
   final String reason;
   final String danger;
   final int funds;
-  final String medicalDocumentUrl;
-  final String hospital;
-  final String hospitalLocation;
+  final List<Document> medicalDocuments;
+  final String hospitalName;
+  final PlaceLocation hospitalLocation;
   final DateTime deadline;
-  bool requestCompleted;
+  bool requestCompleted = false;
   late CharityUser paitent;
 
-  Request(
-    this.reason,
-    this.danger,
-    this.funds,
-    this.medicalDocumentUrl,
-    this.hospital,
-    this.hospitalLocation,
-    this.deadline, {
+  Request({
     required this.patientId,
-    this.requestId,
-    this.donaterId,
-    this.requestCompleted = false,
+    required this.reason,
+    required this.danger,
+    required this.funds,
+    required this.medicalDocuments,
+    required this.hospitalName,
+    required this.hospitalLocation,
+    required this.deadline,
+    requestCompleted,
+    donaitorID,
+    requestID,
   });
 
   Future<void> initializePatient() async {
     final value = await FirestoreInterface.getDocumentFromCollectionByUid(
         'users', patientId);
     paitent = CharityUser.fromJson(value.data() as Map<String, dynamic>);
+  }
+
+
+  Future<void> uploadRequest() async{
+    await FirestoreInterface.uploadRequest(toJson());
   }
 
   Map<String, dynamic> toJson() {
@@ -43,9 +50,9 @@ class Request {
       'reason': reason,
       'danger': danger,
       'funds': funds,
-      'medicalDocumentUrl': medicalDocumentUrl,
-      'hospital': hospital,
-      'hospitalLocation': hospitalLocation,
+      'medicalDocuments': medicalDocuments.map((doc) => doc.toJson()).toList(),
+      'hospitalName': hospitalName,
+      'hospitalLocation': hospitalLocation.toJson(),
       'deadline': Timestamp.fromDate(deadline),
       'requestCompleted': requestCompleted
     };
@@ -53,16 +60,18 @@ class Request {
 
   factory Request.fromJson(Map<String, dynamic> json, String docId) {
     return Request(
-      json['reason'],
-      json['danger'],
-      json['funds'],
-      json['medicalDocumentUrl'],
-      json['hospital'],
-      json['hospitalLocation'],
-      (json['deadline'] as Timestamp).toDate(),
       patientId: json['patientId'],
-      requestId: docId,
-      donaterId: json['donaterId'],
+      reason: json['reason'],
+      danger: json['danger'],
+      funds: json['funds'],
+      medicalDocuments: (json['medicalDocuments'] as List)
+          .map((doc) => Document.fromJson(doc))
+          .toList(),
+      hospitalName: json['hospitalName'],
+      hospitalLocation: PlaceLocation.fromJson(json['hospitalLocation']),
+      deadline: (json['deadline'] as Timestamp).toDate(),
+      requestID: docId,
+      donaitorID: json['donaterId'],
       requestCompleted: json['requestCompleted'] ?? false,
     );
   }

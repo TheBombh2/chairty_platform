@@ -1,6 +1,8 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
+import 'package:chairty_platform/Firebase/fire_storage.dart';
 import 'package:chairty_platform/components/google_map/location_input.dart';
 import 'package:chairty_platform/components/medical_docs_field/medical_docs_field.dart';
+import 'package:chairty_platform/models/document.dart';
 import 'package:chairty_platform/models/place.dart';
 import 'package:chairty_platform/screens/patient_home_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,26 +19,52 @@ var reasonController = TextEditingController();
 var dangerController = TextEditingController();
 var fundsController = TextEditingController();
 var docsController = TextEditingController();
-var hospitalController = TextEditingController();
+var hospitalNameController = TextEditingController();
 var locationController = TextEditingController();
 var deadLineController = TextEditingController();
+final List<Document> uploadedMedicalDocuments = [];
 
-class RequestAndEditScreen extends StatelessWidget {
+class RequestAndEditScreen extends StatefulWidget {
   RequestAndEditScreen({super.key});
+
+  @override
+  State<RequestAndEditScreen> createState() => _RequestAndEditScreenState();
+}
+
+class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
   DateTime? pickedDate;
+
   User? user = FirebaseAuth.instance.currentUser;
-  PlaceLocation? _selectedLocation;
-  void onSubmit() {
+
+  PlaceLocation? _selectedHospitalLocation;
+
+  bool isUploading = false;
+
+  void onSubmit() async {
     Request newRequest = Request(
-        reasonController.text,
-        dangerController.text,
-        int.parse(fundsController.text),
-        docsController.text,
-        hospitalController.text,
-        locationController.text,
-        pickedDate!,
-        patientId: AuthInterface.getCurrentUser()!.uid); //patientId:user!.uid
-    FirestoreInterface.addRequest(newRequest);
+      patientId: AuthInterface.getCurrentUser()!.uid,
+      reason: reasonController.text,
+      danger: dangerController.text,
+      funds: int.parse(fundsController.text),
+      medicalDocuments: uploadedMedicalDocuments,
+      hospitalName: hospitalNameController.text,
+      hospitalLocation: _selectedHospitalLocation!,
+      deadline: pickedDate!,
+    );
+    setState(() {
+      isUploading = true;
+    });
+    for (var ele in newRequest.medicalDocuments) {
+      final url =
+          await FireStorageInterface.uploadMedicalDocument(ele.documentPath);
+      ele.docUrl = await url.getDownloadURL();
+    }
+
+    await newRequest.uploadRequest();
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Request Uploaded Successfully.')));
+    Navigator.of(context).pop();
   }
 
   @override
@@ -60,8 +88,7 @@ class RequestAndEditScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: lightColor, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(color: lightColor),
                 child: Form(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -70,6 +97,9 @@ class RequestAndEditScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
+                          const SizedBox(
+                            height: 20,
+                          ),
                           FormFields(
                             controller: reasonController,
                             type: TextInputType.multiline,
@@ -104,12 +134,14 @@ class RequestAndEditScreen extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
-                          MedicalDocsField(),
+                          MedicalDocsField(
+                            uploadedDocuments: uploadedMedicalDocuments,
+                          ),
                           const SizedBox(
                             height: 20,
                           ),
                           FormFields(
-                            controller: hospitalController,
+                            controller: hospitalNameController,
                             type: TextInputType.text,
                             hint: "Hospital",
                             label: "Hospital Name",
@@ -119,7 +151,7 @@ class RequestAndEditScreen extends StatelessWidget {
                             height: 20,
                           ),
                           LocationInput(onSelectLocation: (location) {
-                            _selectedLocation = location;
+                            _selectedHospitalLocation = location;
                           }),
                           const SizedBox(
                             height: 20,
@@ -169,30 +201,19 @@ class RequestAndEditScreen extends StatelessWidget {
                           const SizedBox(
                             height: 50,
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const PatientHomeScreen()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: darkColor),
-                                child: const Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          )
+                          isUploading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: onSubmit,
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: darkColor),
+                                  child: const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
                         ],
                       ),
                     ),

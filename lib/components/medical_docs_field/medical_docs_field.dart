@@ -7,11 +7,14 @@ import 'package:chairty_platform/components/style.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MedicalDocsField extends StatefulWidget {
-  MedicalDocsField({super.key});
+  const MedicalDocsField({
+    required this.uploadedDocuments,
+    super.key,
+  });
 
   @override
   State<MedicalDocsField> createState() => _MedicalDocsFieldState();
-  final List<Document> uploadedDocuments = [];
+  final List<Document> uploadedDocuments;
 }
 
 class _MedicalDocsFieldState extends State<MedicalDocsField> {

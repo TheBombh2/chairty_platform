@@ -1,6 +1,6 @@
 import 'package:chairty_platform/components/requests_list/request_item.dart';
-import 'package:chairty_platform/cubits/requests_cubit.dart';
-import 'package:chairty_platform/cubits/requests_state.dart';
+import 'package:chairty_platform/cubits/requests/requests_cubit.dart';
+import 'package:chairty_platform/cubits/requests/requests_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

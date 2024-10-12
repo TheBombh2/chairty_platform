@@ -27,7 +27,7 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       appBar: AppBar(
         title:
-            Text(widget.isSelecting ? 'Pick your location' : 'Your Location'),
+            Text(widget.isSelecting ? 'Pick Hospital Location' : 'Hospital Location'),
         actions: [
           if (widget.isSelecting)
             IconButton(
