@@ -135,6 +135,11 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
               (ele) => DocumentPreview(
                 docName: ele.documentName,
                 docFile: ele.documentPath,
+                onRemoveDocument: () {
+                  setState(() {
+                    widget.uploadedDocuments.remove(ele);
+                  });
+                },
               ),
             ),
           ]

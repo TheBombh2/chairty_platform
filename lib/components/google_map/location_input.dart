@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:chairty_platform/components/style.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({
@@ -49,8 +50,7 @@ class _LocationInputState extends State<LocationInput> {
     widget.onSelectLocation(_pickedLocation!);
   }
 
-/*
-  void _getCurrentLocation() async {
+  void _selectOnMap() async {
     Location location = Location();
 
     bool serviceEnabled;
@@ -83,18 +83,18 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    _savePlace(lat, lng);
-  }
-  */
-
-  void _selectOnMap() async {
     final pickedLocation = await Navigator.of(context).push<LatLng>(
       MaterialPageRoute(
-        builder: (ctx) => const MapPage(),
+        builder: (ctx) => MapPage(
+          location: PlaceLocation(latitude: lat, longitude: lng, address: ''),
+        ),
       ),
     );
 
     if (pickedLocation == null) {
+      setState(() {
+        _isGettingLocation = false;
+      });
       return;
     }
 
@@ -156,7 +156,7 @@ class _LocationInputState extends State<LocationInput> {
             Icons.map,
             color: deepOrange,
           ),
-          onPressed: _selectOnMap,
+          onPressed: _isGettingLocation ? null : _selectOnMap,
           label: Text(
             'Select on map',
             style: TextStyle(color: darkColor),

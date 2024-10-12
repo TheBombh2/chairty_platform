@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 class DocumentPreview extends StatelessWidget {
   final File docFile;
   final String docName;
+  final void Function() onRemoveDocument;
   const DocumentPreview({
     super.key,
     required this.docFile,
     required this.docName,
+    required this.onRemoveDocument,
   });
 
   @override
@@ -21,19 +23,31 @@ class DocumentPreview extends StatelessWidget {
         Icons.image,
       ),
       title: Text(docName),
-      trailing: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (ctx) => DocumentView(
-                  documentName:docName,
-                  documentImage: docFile,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => DocumentView(
+                    documentName: docName,
+                    documentImage: docFile,
+                  ),
                 ),
-              ),
-            );
-          },
-          icon: const Icon(Icons.remove_red_eye_outlined)),
+              );
+            },
+            icon: const Icon(Icons.remove_red_eye_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              onRemoveDocument();
+            },
+            icon: const Icon(Icons.cancel_outlined),
+          ),
+        ],
+      ),
     );
   }
 }
