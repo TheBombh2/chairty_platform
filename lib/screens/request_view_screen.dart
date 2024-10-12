@@ -115,8 +115,8 @@ class RequestViewScreen extends StatelessWidget {
               (request.patientId == AuthInterface.getCurrentUser()!.uid) ||
                       (request.requestCompleted)
                   ? const SizedBox.shrink()
-                  : const DonateSection(
-                      amountNeeded: 500,
+                  :  DonateSection(
+                      amountNeeded: request.funds,
                     ),
               const SizedBox(
                 height: 24,
