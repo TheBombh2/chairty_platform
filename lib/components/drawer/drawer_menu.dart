@@ -41,7 +41,7 @@ class DrawerMenu extends StatelessWidget {
                     height: 8,
                   ),
                   Text(
-                    'Belal Salem',
+                    '${AuthInterface.getCurrentCharityUser().firstName} ${AuthInterface.getCurrentCharityUser().lastName}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.varelaRound(
