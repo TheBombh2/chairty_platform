@@ -115,42 +115,49 @@ class RequestViewScreen extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                        onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ProfileScreen(
-                                      user: paitent,
-                                      viewOnly: true,
-                                      patientId: request.patientId,
-                                      donaterId: FirebaseAuth.instance.currentUser?.uid,
-                                    ))),
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 6, 144, 168),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 11),
-                          child: Text(
-                            "view profile",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        )),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 16,
-              ),
               (request.patientId == AuthInterface.getCurrentUser()!.uid) ||
                       (request.requestCompleted)
                   ? const SizedBox.shrink()
-                  : DonateSection(
-                      amountNeeded: request.funds,
+                  : Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfileScreen(
+                                                user: paitent,
+                                                viewOnly: true,
+                                                patientId: request.patientId,
+                                                donaterId: FirebaseAuth
+                                                    .instance.currentUser?.uid,
+                                              ))),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 6, 144, 168),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16))),
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 11),
+                                    child: Text(
+                                      "view profile",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        DonateSection(
+                          amountNeeded: request.funds,
+                        ),
+                      ],
                     ),
               const SizedBox(
                 height: 24,

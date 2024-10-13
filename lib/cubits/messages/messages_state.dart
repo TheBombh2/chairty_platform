@@ -20,4 +20,5 @@ class MessagesError extends MessagesState {
   final String message;
 
   MessagesError({required this.message});
+
 }

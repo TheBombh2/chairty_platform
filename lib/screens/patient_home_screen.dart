@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../cubits/messages/messages_cubit.dart';
+import 'inbox_screen.dart';
+
 class PatientHomeScreen extends StatelessWidget {
   const PatientHomeScreen({super.key});
 
@@ -27,12 +30,29 @@ class PatientHomeScreen extends StatelessWidget {
         backgroundColor: const Color(0xff034956),
         actions: [
           IconButton(
-              onPressed: AuthInterface.firebaseInstance.signOut,
+              onPressed: () {
+                final messagesCubit = context.read<MessagesCubit>();
+                messagesCubit.getOtherUsers();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => InboxScreen()));
+              },
               icon: const Icon(
-                Icons.logout,
-                size: 40,
+                Icons.inbox_rounded,
+                size: 30,
                 color: Colors.white,
-              ))
+              )),
+          IconButton(
+            onPressed: () async {
+              final messagesCubit = context.read<MessagesCubit>();
+              messagesCubit.clearState();
+              await AuthInterface.firebaseInstance.signOut();
+            },
+            icon: const Icon(
+              Icons.logout,
+              size: 30,
+              color: Colors.white,
+            ),
+          )
         ],
         leading: Builder(builder: (ctx) {
           return IconButton(

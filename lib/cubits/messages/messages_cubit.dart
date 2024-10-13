@@ -1,5 +1,4 @@
 import 'package:chairty_platform/Firebase/fire_store.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../models/message.dart';
 import '../../models/user.dart';
@@ -8,6 +7,9 @@ import 'messages_state.dart';
 class MessagesCubit extends Cubit<MessagesState> {
   MessagesCubit() : super(MessagesInitial()){
     getOtherUsers();
+  }
+  void clearState() {
+    emit(MessagesInitial());
   }
 
   Stream<List<Message>> messagesStream(String patientId, String donaterId) {
@@ -20,16 +22,15 @@ class MessagesCubit extends Cubit<MessagesState> {
   }
 
   Stream<List<Map<CharityUser?, String>>> otherUsersStream() async* {
-    while (true) { // Keep the stream alive
-      await Future.delayed(Duration(seconds: 1)); // Adjust as needed
-      yield await FirestoreInterface.getAllOtherUsers(); // Emit the latest users
+    while (true) {
+      await Future.delayed(Duration(seconds: 1));
+      yield await FirestoreInterface.getAllOtherUsers();
     }
   }
 
   Future<void> getOtherUsers() async {
     emit(MessagesLoading());
     try {
-      // Instead of fetching once, we can use a stream
       otherUsersStream().listen((otherUsers) {
         emit(MessagesLoaded(otherUsers: otherUsers));
       });
