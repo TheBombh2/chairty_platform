@@ -86,7 +86,8 @@ class UsersListScreen extends StatelessWidget {
                         builder: (context) => ProfileScreen(
                           user: otherUser,
                           viewOnly: true,
-                          request: singleRequest,
+                          patientId: singleRequest.patientId,
+                          donaterId: singleRequest.donaterId!,
                         ),
                       ),
                     );

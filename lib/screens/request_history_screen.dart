@@ -11,13 +11,10 @@ class RequestHistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor:const Color(0xffE2F1F2),
         title: Text(
-          "Request History",
-          style: GoogleFonts.varelaRound(
-            color: const Color(
-              0xffE2F1F2,
-            ),
-          ),
+          "Requests History",
+          style: GoogleFonts.varelaRound(),
         ),
         centerTitle: true,
         backgroundColor: const Color(0xff034956),

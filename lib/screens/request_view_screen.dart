@@ -4,11 +4,14 @@ import 'package:chairty_platform/components/request_details_view/documents_list_
 import 'package:chairty_platform/components/request_details_view/donate_section.dart';
 import 'package:chairty_platform/components/request_details_view/hospital_secion/hospital_details_secion.dart';
 import 'package:chairty_platform/models/request.dart';
+import 'package:chairty_platform/screens/profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RequestViewScreen extends StatelessWidget {
   const RequestViewScreen({super.key, required this.request});
+
   final Request request;
 
   @override
@@ -105,9 +108,40 @@ class RequestViewScreen extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-               HospitalDetailsSecion(
+              HospitalDetailsSecion(
                 hospitalName: request.hospitalName,
                 hospitalLocation: request.hospitalLocation,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen(
+                                      user: paitent,
+                                      viewOnly: true,
+                                      patientId: request.patientId,
+                                      donaterId: FirebaseAuth.instance.currentUser?.uid,
+                                    ))),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 6, 144, 168),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 11),
+                          child: Text(
+                            "view profile",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        )),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 16,
@@ -115,7 +149,7 @@ class RequestViewScreen extends StatelessWidget {
               (request.patientId == AuthInterface.getCurrentUser()!.uid) ||
                       (request.requestCompleted)
                   ? const SizedBox.shrink()
-                  :  DonateSection(
+                  : DonateSection(
                       amountNeeded: request.funds,
                     ),
               const SizedBox(

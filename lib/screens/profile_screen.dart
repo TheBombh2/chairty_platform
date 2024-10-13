@@ -6,23 +6,39 @@ import 'package:flutter/material.dart';
 import '../models/request.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({required this.user, required this.viewOnly,this.request, super.key});
+   ProfileScreen(
+      {required this.user,
+      required this.viewOnly,
+        this.donaterId,
+       this.patientId,
+      super.key});
+
   final CharityUser user;
   final bool viewOnly;
-  Request? request;
+  String? donaterId;
+  String? patientId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: viewOnly?FloatingActionButton(
-        onPressed: () =>Navigator.push(context,MaterialPageRoute(builder: (context)=>ChatScreenStream(patientId: request!.patientId, donaterId: request!.donaterId!,otherUser: user,))),
-        backgroundColor: Color(0xFFF26722),
-        shape: CircleBorder(),
-        child: Icon(
-          Icons.chat,
-          color: Colors.white,
-        ),
-      ):null,
+      floatingActionButton: viewOnly
+          ? FloatingActionButton(
+              onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ChatScreenStream(
+                            patientId: patientId!,
+                            donaterId: donaterId!,
+                            otherUser: user,
+                          ))),
+              backgroundColor: Color(0xFFF26722),
+              shape: CircleBorder(),
+              child: Icon(
+                Icons.chat,
+                color: Colors.white,
+              ),
+            )
+          : null,
       appBar: AppBar(
         foregroundColor: Colors.white,
         title: Text(

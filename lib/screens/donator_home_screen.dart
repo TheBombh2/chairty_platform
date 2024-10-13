@@ -4,6 +4,8 @@ import 'package:chairty_platform/components/requests_list/request_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'inbox_screen.dart';
+
 class DonatorHomeScreen extends StatelessWidget {
   const DonatorHomeScreen({super.key});
 
@@ -23,10 +25,17 @@ class DonatorHomeScreen extends StatelessWidget {
         backgroundColor: const Color(0xff034956),
         actions: [
           IconButton(
+            onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>InboxScreen())),
+            icon: const Icon(
+              Icons.inbox_rounded,
+              size: 30,
+              color: Colors.white,
+            )),
+          IconButton(
               onPressed: AuthInterface.firebaseInstance.signOut,
               icon: const Icon(
                 Icons.logout,
-                size: 40,
+                size: 30,
                 color: Colors.white,
               ))
         ],

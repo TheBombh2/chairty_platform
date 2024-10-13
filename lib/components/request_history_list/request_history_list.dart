@@ -1,26 +1,42 @@
 import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/components/request_history_list/request_history_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RequestHistoryList extends StatefulWidget {
+import '../../Firebase/auth_interface.dart';
+import '../../cubits/requests/requests_cubit.dart';
+import '../../cubits/requests/requests_state.dart';
+
+class RequestHistoryList extends StatelessWidget {
   const RequestHistoryList({super.key});
 
   @override
-  State<RequestHistoryList> createState() => _RequestHistoryListState();
-}
-
-class _RequestHistoryListState extends State<RequestHistoryList> {
-  @override
-  void initState() {
-    super.initState();
-    FirestoreInterface.init("hZTgPOEhOgXiGa1EEdZhmKUlGE32");//uid {patient}
-  }
-  @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: FirestoreInterface.requests.length,
-        itemBuilder: (context,index){
-      return RequestHistoryItem(requestCompleted: FirestoreInterface.requests[index].requestCompleted,reason: FirestoreInterface.requests[index].reason,funds: FirestoreInterface.requests[index].funds,deadline: FirestoreInterface.requests[index].deadline,);
-    });
+    return BlocBuilder<RequestsCubit, RequestsState>(
+      builder: (ctx, state) {
+        if (state is RequestsLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is RequeststError) {
+          return const Center(
+            child: Text('Something went wrong!'),
+          );
+        } else if (state is RequestsLoaded) {
+          final donaterRequests = state.requests
+              .where((ele) =>
+          ele.donaterId == AuthInterface.getCurrentUser()!.uid)
+              .toList();
+          return ListView.builder(
+              itemCount: donaterRequests.length,
+              itemBuilder: (ctx, index) {
+                final singleRequest = donaterRequests[index];
+                return RequestHistoryItem(
+                  request: singleRequest,
+                );
+              });
+        } else {
+          return const Center(child: Text('No Requests Available.'));
+        }
+      },
+    );
   }
 }
