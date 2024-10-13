@@ -1,21 +1,37 @@
 import 'package:chairty_platform/models/user.dart';
+import 'package:chairty_platform/screens/chat_screen.dart';
+import 'package:chairty_platform/screens/chat_screen_stream.dart';
 import 'package:flutter/material.dart';
 
+import '../models/request.dart';
+
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({required this.user, super.key});
+  ProfileScreen({required this.user, required this.viewOnly,this.request, super.key});
   final CharityUser user;
+  final bool viewOnly;
+  Request? request;
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "My Account",
-          style: TextStyle(color: Colors.white), // Set the title color to white
+      floatingActionButton: viewOnly?FloatingActionButton(
+        onPressed: () =>Navigator.push(context,MaterialPageRoute(builder: (context)=>ChatScreenStream(patientId: request!.patientId, donaterId: request!.donaterId!,otherUser: user,))),
+        backgroundColor: Color(0xFFF26722),
+        shape: CircleBorder(),
+        child: Icon(
+          Icons.chat,
+          color: Colors.white,
         ),
-        backgroundColor: const Color(0xFF034956), // AppBar color from the palette
+      ):null,
+      appBar: AppBar(
+        foregroundColor: Colors.white,
+        title: Text(
+          viewOnly ? user.firstName : "My Account",
+          style: const TextStyle(
+              color: Colors.white), // Set the title color to white
+        ),
+        backgroundColor:
+            const Color(0xFF034956), // AppBar color from the palette
       ),
       body: Container(
         color: const Color(0xFFF6FAF7), // Background color from the palette
@@ -54,7 +70,7 @@ class ProfileScreen extends StatelessWidget {
                         CrossAxisAlignment.start, // Align to the left
                     children: [
                       Text(
-                         '${user.firstName} ${user.lastName}',
+                        '${user.firstName} ${user.lastName}',
                         style: const TextStyle(
                           fontSize: 32, // Increased font size
                           fontWeight: FontWeight.bold,
@@ -64,11 +80,13 @@ class ProfileScreen extends StatelessWidget {
                       const SizedBox(height: 10),
 
                       // User Details
-                      
-                      _buildDetailRow(Icons.person, "Gender: ${user.gender.name[0].toUpperCase() + user.gender.name.substring(1)}"),
+
+                      _buildDetailRow(Icons.person,
+                          "Gender: ${user.gender.name[0].toUpperCase() + user.gender.name.substring(1)}"),
+                      _buildDetailRow(Icons.calendar_today,
+                          "Date of Birth: ${user.dateOfBirth.day}/${user.dateOfBirth.month}/${user.dateOfBirth.year}"),
                       _buildDetailRow(
-                          Icons.calendar_today, "Date of Birth: ${user.dateOfBirth.day}/${user.dateOfBirth.month}/${user.dateOfBirth.year}"),
-                      _buildDetailRow(Icons.phone, "Phone: ${user.phoneNumber}"),
+                          Icons.phone, "Phone: ${user.phoneNumber}"),
                       _buildDetailRow(Icons.email, "E-mail: ${user.email}"),
                       const SizedBox(height: 10),
 
@@ -96,30 +114,33 @@ class ProfileScreen extends StatelessWidget {
             ),
 
             // Edit Profile Button
-            Padding(
-              padding: const EdgeInsets.only(
-                  bottom: 16.0), // Bottom padding for button
-              child: ElevatedButton(
-                onPressed: () {
-                  // Action when button is pressed
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color(0xFF034956), // Button color from the palette
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // Rounded button
+            viewOnly
+                ? SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 16.0), // Bottom padding for button
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Action when button is pressed
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(
+                            0xFF034956), // Button color from the palette
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(30), // Rounded button
+                        ),
+                      ),
+                      child: const Text(
+                        "Edit Profile",
+                        style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white), // Increased button text size
+                      ),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  "Edit Profile",
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: Colors.white), // Increased button text size
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -130,8 +151,8 @@ class ProfileScreen extends StatelessWidget {
   Widget _buildDetailRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon,
-            color: const Color(0xFFF26722)), // Updated icon color to match the button
+        Icon(icon, color: const Color(0xFFF26722)),
+        // Updated icon color to match the button
         const SizedBox(width: 10),
         Expanded(
           child: Text(

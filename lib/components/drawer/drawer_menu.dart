@@ -1,8 +1,11 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/components/drawer/drawer_list_tile.dart';
+import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
 import 'package:chairty_platform/screens/request_history_screen.dart';
 import 'package:chairty_platform/screens/settings_screen.dart';
+import 'package:chairty_platform/screens/users_list_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -62,6 +65,7 @@ class DrawerMenu extends StatelessWidget {
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => ProfileScreen(
+                    viewOnly: false,
                         user: AuthInterface.getCurrentCharityUser(),
                       )));
             },
@@ -83,6 +87,15 @@ class DrawerMenu extends StatelessWidget {
               Navigator.of(context).pop();
               Navigator.of(context).push(
                   MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
+            },
+          ),
+          DrawerListTile(
+            tileText: (AuthInterface.getCurrentCharityUser().userType==UserType.donator)?'Patients':'Donaters',
+            tileIcon: Icons.people,
+            onTileClicked: () {
+               Navigator.of(context).pop();
+               Navigator.of(context).push(
+                   MaterialPageRoute(builder: (ctx) => UsersListScreen()));
             },
           ),
         ],

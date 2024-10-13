@@ -24,6 +24,7 @@ class RequestsCubit extends Cubit<RequestsState> {
           await request.initializePatient();
           loadedRequests.add(request);
           if (request.requestCompleted) {
+            await request.initializeDonater();
             completedRequests.add(request);
           } else {
             uncompletedRequsts.add(request);

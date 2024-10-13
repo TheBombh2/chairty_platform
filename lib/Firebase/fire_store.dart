@@ -1,3 +1,4 @@
+import 'package:chairty_platform/models/message.dart';
 import 'package:chairty_platform/models/request.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,6 +26,24 @@ class FirestoreInterface {
   static Future<DocumentSnapshot> getDocumentFromCollectionByUid(
       String collection, String uid) async {
     return await firebaseInstance.collection(collection).doc(uid).get();
+  }
+
+  static Future<List<Map<String, dynamic>>> getMessages(String patientId, String donaterId) async {
+    try {
+      final querySnapshot = await firebaseInstance
+          .collection('messages')
+          .where('patientId', isEqualTo: patientId)
+          .where('donaterId', isEqualTo: donaterId)
+          .orderBy('timestamp')
+          .get();
+
+      return querySnapshot.docs.map((doc) => doc.data()).toList();
+    } catch (error) {
+      throw Exception('Failed to load messages: $error');
+    }
+  }
+  static Future<void> sendMessage(Message message) async {
+    await firebaseInstance.collection('messages').add(message.toJson());
   }
 
   static Future<CharityUser?> getUserById(String uid) async {
@@ -86,9 +105,9 @@ class FirestoreInterface {
       });
 
       int requestIndex =
-          requests.indexWhere((request) => request.requestId == requestId);
-      requests[requestIndex].donaterId = donaterId;
-      requests[requestIndex].requestCompleted = true;
+          allRequests.indexWhere((request) => request.requestId == requestId);
+      allRequests[requestIndex].donaterId = donaterId;
+      allRequests[requestIndex].requestCompleted = true;
     } catch (e) {
       print("Error taking over request: $e");
     }

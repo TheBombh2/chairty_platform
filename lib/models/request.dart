@@ -17,6 +17,7 @@ class Request {
   final DateTime deadline;
   bool requestCompleted;
   late CharityUser paitent;
+  late CharityUser donater;
 
   Request({
     required this.patientId,
@@ -29,13 +30,18 @@ class Request {
     required this.deadline,
     this.requestCompleted = false,
     this.requestId,
-    donaitorID,
+    this.donaterId,
   });
 
   Future<void> initializePatient() async {
     final value = await FirestoreInterface.getDocumentFromCollectionByUid(
         'users', patientId);
     paitent = CharityUser.fromJson(value.data() as Map<String, dynamic>);
+  }
+  Future<void> initializeDonater() async {
+    final value = await FirestoreInterface.getDocumentFromCollectionByUid(
+        'users', donaterId!);
+    donater = CharityUser.fromJson(value.data() as Map<String, dynamic>);
   }
 
 
@@ -71,7 +77,7 @@ class Request {
       hospitalLocation: PlaceLocation.fromJson(json['hospitalLocation']),
       deadline: (json['deadline'] as Timestamp).toDate(),
       requestId: docId,
-      donaitorID: json['donaterId'],
+      donaterId: json['donaterId'],
       requestCompleted: json['requestCompleted'] as bool,
     );
   }
