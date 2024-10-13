@@ -27,6 +27,14 @@ class FirestoreInterface {
       String collection, String uid) async {
     return await firebaseInstance.collection(collection).doc(uid).get();
   }
+  static Stream<QuerySnapshot> getMessagesStream(String patientId, String donaterId) {
+    return FirebaseFirestore.instance
+        .collection('messages')
+        .where('patientId', isEqualTo: patientId)
+        .where('donaterId', isEqualTo: donaterId)
+        .orderBy('timestamp', descending: false)
+        .snapshots();
+  }
 
   static Future<List<Map<String, dynamic>>> getMessages(String patientId, String donaterId) async {
     try {

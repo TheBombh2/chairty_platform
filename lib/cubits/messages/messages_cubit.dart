@@ -7,12 +7,13 @@ import 'messages_state.dart';
 class MessagesCubit extends Cubit<MessagesState> {
   MessagesCubit() : super(MessagesInitial());
 
-  Stream<List<Message>> get messagesStream {
-    return FirebaseFirestore.instance
-        .collection('messages')
-        .orderBy('timestamp')
-        .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Message.fromJson(doc.data())).toList());
+  Stream<List<Message>> messagesStream(String patientId, String donaterId) {
+    return FirestoreInterface.getMessagesStream(patientId, donaterId).map(
+          (snapshot) => snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return Message.fromJson(data);
+      }).toList(),
+    );
   }
 
 

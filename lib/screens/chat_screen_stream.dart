@@ -52,7 +52,7 @@ class ChatScreenStream extends StatelessWidget {
           children: [
             Expanded(
               child: StreamBuilder<List<Message>>(
-                stream: context.read<MessagesCubit>().messagesStream,
+                stream: context.read<MessagesCubit>().messagesStream(patientId,donaterId),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
