@@ -4,7 +4,9 @@ import 'package:chairty_platform/components/medical_docs_field/document_preview.
 import 'package:chairty_platform/models/document.dart';
 import 'package:flutter/material.dart';
 import 'package:chairty_platform/components/style.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:chairty_platform/components/style.dart';
 
 class MedicalDocsField extends StatefulWidget {
   const MedicalDocsField({
@@ -28,8 +30,12 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Choose an image soruce.'),
+          title: Text(
+            'Choose an image soruce.',
+            style: GoogleFonts.varelaRound(fontSize: 16),
+          ),
           content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: ElevatedButton(
@@ -37,8 +43,16 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
                     useCamera = true;
                     Navigator.of(ctx).pop();
                   },
-                  child: const Text('Camera'),
+                  style: ElevatedButton.styleFrom(backgroundColor: lightColor),
+                  child: Text(
+                    'Camera',
+                    style: GoogleFonts.varelaRound(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
                 ),
+              ),
+              const SizedBox(
+                width: 10,
               ),
               Expanded(
                 child: ElevatedButton(
@@ -46,7 +60,12 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
                     useCamera = false;
                     Navigator.of(ctx).pop();
                   },
-                  child: const Text('Gallery'),
+                  style: ElevatedButton.styleFrom(backgroundColor: lightColor),
+                  child: Text(
+                    'Gallery',
+                    style: GoogleFonts.varelaRound(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
                 ),
               ),
             ],
@@ -74,20 +93,45 @@ class _MedicalDocsFieldState extends State<MedicalDocsField> {
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Name for document'),
+          title: Text(
+            'Enter a name for document',
+            style: GoogleFonts.varelaRound(fontSize: 16),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(
+                        color: darkColor,
+                        width: 2,
+                      )),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    borderSide: BorderSide(
+                      color: deepOrange,
+                      width: 2,
+                    ),
+                  ),
+                ),
                 onChanged: (value) {
                   docName = value;
                 },
               ),
+              const SizedBox(height: 10,),
               ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: const Text('Add'))
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: lightColor),
+                child: Text(
+                  'Add',
+                  style: GoogleFonts.varelaRound(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              )
             ],
           ),
         ),
