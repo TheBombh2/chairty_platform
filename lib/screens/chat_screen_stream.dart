@@ -14,6 +14,7 @@ class ChatScreenStream extends StatelessWidget {
   final CharityUser otherUser;
 
   const ChatScreenStream({
+    super.key,
     required this.patientId,
     required this.donaterId,
     required this.otherUser,

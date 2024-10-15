@@ -41,7 +41,6 @@ class PatientHomeScreen extends StatelessWidget {
                 size: 30,
                 color: Colors.white,
               )),
-         
         ],
         leading: Builder(builder: (ctx) {
           return IconButton(

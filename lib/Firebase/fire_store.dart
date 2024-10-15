@@ -30,7 +30,9 @@ class FirestoreInterface {
       String collection, String uid) async {
     return await firebaseInstance.collection(collection).doc(uid).get();
   }
-  static Stream<QuerySnapshot> getMessagesStream(String patientId, String donaterId) {
+
+  static Stream<QuerySnapshot> getMessagesStream(
+      String patientId, String donaterId) {
     return FirebaseFirestore.instance
         .collection('messages')
         .where('patientId', isEqualTo: patientId)
@@ -39,9 +41,12 @@ class FirestoreInterface {
         .snapshots();
   }
 
-  static Future<List<Map<CharityUser?,String>>> getAllOtherUsers() async {
+  static Future<List<Map<CharityUser?, String>>?> getAllOtherUsers() async {
     try {
-      final userId = FirebaseAuth.instance.currentUser!.uid;
+      if (AuthInterface.getCurrentUser() == null) {
+        return null;
+      }
+      final userId = AuthInterface.getCurrentUser()!.uid;
       final userType = AuthInterface.getCurrentCharityUser().userType;
       QuerySnapshot querySnapshot;
 
@@ -62,7 +67,10 @@ class FirestoreInterface {
       final userIds = <String>{};
       for (var doc in querySnapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
-        final id = (userType == UserType.donator ? data['patientId'] : data['donaterId']).toString();
+        final id = (userType == UserType.donator
+                ? data['patientId']
+                : data['donaterId'])
+            .toString();
         userIds.add(id);
       }
       final List<Map<CharityUser?, String>> otherUsers = await Future.wait(
@@ -77,8 +85,6 @@ class FirestoreInterface {
       throw Exception('Failed to load messages: $error');
     }
   }
-
-
 
   static Future<void> sendMessage(Message message) async {
     await firebaseInstance.collection('messages').add(message.toJson());

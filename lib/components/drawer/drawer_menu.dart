@@ -108,6 +108,10 @@ class DrawerMenu extends StatelessWidget {
               tileIcon: Icons.logout,
               onTileClicked: () async {
                 final messagesCubit = context.read<MessagesCubit>();
+                if (MessagesCubit.messageStream != null) {
+                  await MessagesCubit.messageStream!.cancel();
+                  MessagesCubit.messageStream = null;
+                }
                 messagesCubit.clearState();
                 await AuthInterface.firebaseInstance.signOut();
               })
