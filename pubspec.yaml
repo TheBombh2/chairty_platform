@@ -42,7 +42,8 @@ dependencies:
   flutter_lints: ^4.0.0
   hexcolor: ^3.0.1
   intl: ^0.18.1
-
+  flutter_stripe: ^11.2.0
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:
