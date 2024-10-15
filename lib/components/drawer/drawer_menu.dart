@@ -1,5 +1,6 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/components/drawer/drawer_list_tile.dart';
+import 'package:chairty_platform/cubits/messages/messages_cubit.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
 import 'package:chairty_platform/screens/request_history_screen.dart';
@@ -7,6 +8,7 @@ import 'package:chairty_platform/screens/settings_screen.dart';
 import 'package:chairty_platform/screens/users_list_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DrawerMenu extends StatelessWidget {
@@ -65,21 +67,21 @@ class DrawerMenu extends StatelessWidget {
               Navigator.of(context).pop();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (ctx) => ProfileScreen(
-                    viewOnly: false,
+                        viewOnly: false,
                         user: AuthInterface.getCurrentCharityUser(),
                       )));
             },
           ),
-          if(showHistory)
-          DrawerListTile(
-            tileText: 'History',
-            tileIcon: Icons.history,
-            onTileClicked: () {
-              Navigator.of(context).pop();
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (ctx) => const RequestHistoryScreen()));
-            },
-          ),
+          if (showHistory)
+            DrawerListTile(
+              tileText: 'History',
+              tileIcon: Icons.history,
+              onTileClicked: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => const RequestHistoryScreen()));
+              },
+            ),
           DrawerListTile(
             tileText: 'Settings',
             tileIcon: Icons.settings,
@@ -90,14 +92,25 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           DrawerListTile(
-            tileText: (AuthInterface.getCurrentCharityUser().userType==UserType.donator)?'Patients':'Donaters',
+            tileText: (AuthInterface.getCurrentCharityUser().userType ==
+                    UserType.donator)
+                ? 'Patients'
+                : 'Donaters',
             tileIcon: Icons.people,
             onTileClicked: () {
-               Navigator.of(context).pop();
-               Navigator.of(context).push(
-                   MaterialPageRoute(builder: (ctx) => UsersListScreen()));
+              Navigator.of(context).pop();
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => UsersListScreen()));
             },
           ),
+          DrawerListTile(
+              tileText: 'Log out',
+              tileIcon: Icons.logout,
+              onTileClicked: () async {
+                final messagesCubit = context.read<MessagesCubit>();
+                messagesCubit.clearState();
+                await AuthInterface.firebaseInstance.signOut();
+              })
         ],
       ),
     );

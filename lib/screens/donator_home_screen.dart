@@ -38,17 +38,6 @@ class DonatorHomeScreen extends StatelessWidget {
                 size: 30,
                 color: Colors.white,
               )),
-          IconButton(
-              onPressed: () async {
-                final messagesCubit = context.read<MessagesCubit>();
-                messagesCubit.clearState();
-                await AuthInterface.firebaseInstance.signOut();
-              },
-              icon: const Icon(
-                Icons.logout,
-                size: 30,
-                color: Colors.white,
-              ))
         ],
         leading: Builder(builder: (ctx) {
           return IconButton(
