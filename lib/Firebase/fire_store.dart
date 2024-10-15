@@ -2,7 +2,6 @@ import 'package:chairty_platform/models/message.dart';
 import 'package:chairty_platform/models/request.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'auth_interface.dart';
 
