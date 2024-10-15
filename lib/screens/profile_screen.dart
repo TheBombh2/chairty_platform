@@ -1,16 +1,13 @@
 import 'package:chairty_platform/models/user.dart';
-import 'package:chairty_platform/screens/chat_screen.dart';
 import 'package:chairty_platform/screens/chat_screen_stream.dart';
 import 'package:flutter/material.dart';
 
-import '../models/request.dart';
-
 class ProfileScreen extends StatelessWidget {
-   ProfileScreen(
+  ProfileScreen(
       {required this.user,
       required this.viewOnly,
-        this.donaterId,
-       this.patientId,
+      this.donaterId,
+      this.patientId,
       super.key});
 
   final CharityUser user;
@@ -32,8 +29,8 @@ class ProfileScreen extends StatelessWidget {
                             otherUser: user,
                           ))),
               backgroundColor: Color(0xFFF26722),
-              shape: CircleBorder(),
-              child: Icon(
+              shape: const CircleBorder(),
+              child: const Icon(
                 Icons.chat,
                 color: Colors.white,
               ),
@@ -130,33 +127,6 @@ class ProfileScreen extends StatelessWidget {
             ),
 
             // Edit Profile Button
-            viewOnly
-                ? SizedBox.shrink()
-                : Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 16.0), // Bottom padding for button
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Action when button is pressed
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(
-                            0xFF034956), // Button color from the palette
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(30), // Rounded button
-                        ),
-                      ),
-                      child: const Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white), // Increased button text size
-                      ),
-                    ),
-                  ),
           ],
         ),
       ),
