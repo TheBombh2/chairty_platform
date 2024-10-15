@@ -100,6 +100,14 @@ class FirestoreInterface {
     return null;
   }
 
+  static Future<void> updateDataInUser(
+      String userId, String field, dynamic newData) async {
+    await firebaseInstance
+        .collection('users')
+        .doc(userId)
+        .update({field: newData});
+  }
+
   // static Future<void> init(String uid) async {
   //   UserType? userType = (await getUserById(uid))!.userType;
   //   QuerySnapshot allRequestsSnapshot =

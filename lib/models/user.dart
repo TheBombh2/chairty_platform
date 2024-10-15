@@ -3,7 +3,7 @@ enum UserType { donator, patient }
 enum Gender { male, female }
 
 class CharityUser {
-   CharityUser({
+  CharityUser({
     required this.userType,
     required this.email,
     required this.firstName,
@@ -28,14 +28,14 @@ class CharityUser {
   Map<String, dynamic> toJson() {
     return {
       'email': email,
-      'type': userType.name, 
+      'type': userType.name,
       'firstName': firstName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
-      'gender': gender.name, // 
-      'dateOfBirth': dateOfBirth.toIso8601String(), 
+      'gender': gender.name, //
+      'dateOfBirth': dateOfBirth.toIso8601String(),
       'imageUrl': imageUrl,
-      'bio':bio,
+      'bio': bio,
     };
   }
 

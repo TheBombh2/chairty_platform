@@ -20,15 +20,19 @@ class AuthInterface {
 
   static Future<String> authinticateWithEmailAndPassword(
       String email, String password, bool isLogin) async {
-    if (isLogin) {
-      await firebaseInstance.signInWithEmailAndPassword(
-          email: email, password: password);
+    try {
+      if (isLogin) {
+        await firebaseInstance.signInWithEmailAndPassword(
+            email: email, password: password);
 
-      return 'Sign in Successful';
-    } else {
-      await firebaseInstance.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return 'Sign up Successful';
+        return 'Sign in Successful';
+      } else {
+        await firebaseInstance.createUserWithEmailAndPassword(
+            email: email, password: password);
+        return 'Sign up Successful';
+      }
+    } on FirebaseException catch (error) {
+      return error.message!;
     }
   }
 

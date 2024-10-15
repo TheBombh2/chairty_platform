@@ -9,9 +9,12 @@ import 'inbox_screen.dart';
 
 class DonatorHomeScreen extends StatelessWidget {
   const DonatorHomeScreen({super.key});
+  
+  
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -30,7 +33,7 @@ class DonatorHomeScreen extends StatelessWidget {
                 final messagesCubit = context.read<MessagesCubit>();
                 messagesCubit.getOtherUsers();
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => InboxScreen()));
+                    MaterialPageRoute(builder: (context) => const InboxScreen()));
               },
               icon: const Icon(
                 Icons.inbox_rounded,

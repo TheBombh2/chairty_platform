@@ -1,6 +1,5 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/screens/chat_screen_stream.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,11 +11,12 @@ import '../models/user.dart';
 class InboxScreen extends StatelessWidget {
   const InboxScreen({super.key});
 
+ 
+
   @override
   Widget build(BuildContext context) {
     final currentUserType = AuthInterface.getCurrentCharityUser().userType;
-    final currentUserId = FirebaseAuth.instance.currentUser!.uid;
-
+    final currentUserId = AuthInterface.getCurrentUser()!.uid;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -43,7 +43,8 @@ class InboxScreen extends StatelessWidget {
               child: ListView.builder(
                 itemCount: state.otherUsers.length,
                 itemBuilder: (ctx, index) {
-                  final CharityUser otherUser = state.otherUsers[index].keys.first!;
+                  final CharityUser otherUser =
+                      state.otherUsers[index].keys.first!;
 
                   return Card(
                     surfaceTintColor: const Color(0xffE2F1F2),
@@ -65,13 +66,18 @@ class InboxScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => ChatScreenStream(
                               otherUser: otherUser,
-                              donaterId: currentUserType == UserType.donator ? currentUserId : state.otherUsers[index][otherUser]!,
-                              patientId: currentUserType == UserType.patient ? currentUserId : state.otherUsers[index][otherUser]!,
+                              donaterId: currentUserType == UserType.donator
+                                  ? currentUserId
+                                  : state.otherUsers[index][otherUser]!,
+                              patientId: currentUserType == UserType.patient
+                                  ? currentUserId
+                                  : state.otherUsers[index][otherUser]!,
                             ),
                           ),
                         );
                       },
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 20),
                       leading: CircleAvatar(
                         radius: 30,
                         backgroundImage: NetworkImage(otherUser.imageUrl),
