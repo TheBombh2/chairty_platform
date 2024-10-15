@@ -1,5 +1,4 @@
 import 'package:chairty_platform/Firebase/auth_interface.dart';
-import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/request.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../components/requests_list/request_item.dart';
 import '../cubits/requests/requests_cubit.dart';
 import '../cubits/requests/requests_state.dart';
 

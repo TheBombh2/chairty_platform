@@ -16,6 +16,7 @@ class Request {
   final PlaceLocation hospitalLocation;
   final DateTime deadline;
   bool requestCompleted;
+  bool requestExpired;
   late CharityUser paitent;
   late CharityUser donater;
 
@@ -29,6 +30,7 @@ class Request {
     required this.hospitalLocation,
     required this.deadline,
     this.requestCompleted = false,
+    this.requestExpired = false,
     this.requestId,
     this.donaterId,
   });
@@ -60,7 +62,8 @@ class Request {
       'hospitalName': hospitalName,
       'hospitalLocation': hospitalLocation.toJson(),
       'deadline': Timestamp.fromDate(deadline),
-      'requestCompleted': requestCompleted
+      'requestCompleted': requestCompleted,
+      'expired':requestExpired
     };
   }
 
@@ -79,6 +82,7 @@ class Request {
       requestId: docId,
       donaterId: json['donaterId'],
       requestCompleted: json['requestCompleted'] as bool,
+      requestExpired:  json['expired'] as bool,
     );
   }
 }

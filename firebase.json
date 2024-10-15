@@ -1,1 +1,40 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"charity-app-11355","appId":"1:547521110166:android:6acf2c3826c6bfbeefa2b7","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"charity-app-11355","configurations":{"android":"1:547521110166:android:6acf2c3826c6bfbeefa2b7","ios":"1:547521110166:ios:256b6ed0133b3721efa2b7","web":"1:547521110166:web:8417d6688dfd5fa9efa2b7","windows":"1:547521110166:web:f72cc769c1639492efa2b7"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "charity-app-11355",
+          "appId": "1:547521110166:android:6acf2c3826c6bfbeefa2b7",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "charity-app-11355",
+          "configurations": {
+            "android": "1:547521110166:android:6acf2c3826c6bfbeefa2b7",
+            "ios": "1:547521110166:ios:256b6ed0133b3721efa2b7",
+            "web": "1:547521110166:web:8417d6688dfd5fa9efa2b7",
+            "windows": "1:547521110166:web:f72cc769c1639492efa2b7"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ]
+}

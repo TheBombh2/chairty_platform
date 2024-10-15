@@ -23,10 +23,10 @@ class RequestsCubit extends Cubit<RequestsState> {
           final request = Request.fromJson(element.data(), element.id);
           await request.initializePatient();
           loadedRequests.add(request);
-          if (request.requestCompleted) {
+          if (request.requestCompleted ) {
             await request.initializeDonater();
             completedRequests.add(request);
-          } else {
+          } else if(!request.requestCompleted && !request.requestExpired){
             uncompletedRequsts.add(request);
           }
         }
