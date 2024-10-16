@@ -11,13 +11,15 @@ class RequestList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RequestsCubit, RequestsState>(builder: (ctx, state) {
       if (state is RequestsLoading) {
-        
         return const Center(child: CircularProgressIndicator());
       } else if (state is RequeststError) {
         return const Center(
           child: Text('Something went wrong!'),
         );
       } else if (state is RequestsLoaded) {
+        if (state.uncompletedRequsts.isEmpty) {
+          return const Center(child: Text('No Requests Available.'));
+        }
         return ListView.builder(
             itemCount: state.uncompletedRequsts.length,
             itemBuilder: (ctx, index) {
