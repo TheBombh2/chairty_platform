@@ -36,6 +36,7 @@ class _WalletScreenState extends State<WalletScreen> {
             builder: (ctx, snapshot) {
               if (snapshot.hasData) {
                 final isMoneyRequested = snapshot.data!['moneyRequested'];
+                final currentWalletMoney = snapshot.data!['wallet'] as int;
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -52,7 +53,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       height: 30,
                     ),
                     ElevatedButton(
-                      onPressed: isMoneyRequested
+                      onPressed: (isMoneyRequested || currentWalletMoney <= 0)
                           ? null
                           : () async {
                               await FirestoreInterface.updateDataInUser(
