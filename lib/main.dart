@@ -24,12 +24,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => RequestsCubit()),
         BlocProvider(create: (context) => MessagesCubit()..getOtherUsers()),
       ],
       child: MaterialApp(
+        theme: ThemeData(
+        primaryColor: const Color(0xFF034956),
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: const Color(0xFF034956),
+          secondary: const Color(0xFFF26722),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF6FAF7),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Color(0xFF034956)),
+          bodyMedium: TextStyle(color: Color(0xFF034956)),
+        ),
+      ),
         debugShowCheckedModeBanner: false,
         home: const AuthScreen(),
         routes: {
