@@ -4,7 +4,6 @@ import 'package:chairty_platform/cubits/messages/messages_cubit.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/profile_screen.dart';
 import 'package:chairty_platform/screens/request_history_screen.dart';
-import 'package:chairty_platform/screens/settings_screen.dart';
 import 'package:chairty_platform/screens/users_list_screen.dart';
 import 'package:chairty_platform/screens/wallet_screen.dart';
 import 'package:flutter/material.dart';

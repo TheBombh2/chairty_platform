@@ -5,7 +5,6 @@ import 'package:chairty_platform/Firebase/fire_storage.dart';
 import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/user.dart';
 import 'package:chairty_platform/screens/auth_screens/auth_screen.dart';
-import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart'; // Added import
