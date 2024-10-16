@@ -32,7 +32,7 @@ class AuthInterface {
         return 'Sign up Successful';
       }
     } on FirebaseException catch (error) {
-      return error.message!;
+      return 'error-${error.message}';
     }
   }
 
