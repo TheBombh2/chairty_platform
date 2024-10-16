@@ -1,4 +1,5 @@
 import 'package:chairty_platform/components/request_history_list/request_history_item.dart';
+import 'package:chairty_platform/screens/request_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,8 +29,11 @@ class RequestHistoryList extends StatelessWidget {
               itemCount: donaterRequests.length,
               itemBuilder: (ctx, index) {
                 final singleRequest = donaterRequests[index];
-                return RequestHistoryItem(
-                  request: singleRequest,
+                return GestureDetector(
+                  onTap: ()=>Navigator.push(context,MaterialPageRoute(builder: (context)=>RequestViewScreen(request: singleRequest,))),
+                  child: RequestHistoryItem(
+                    request: singleRequest,
+                  ),
                 );
               });
         } else {
