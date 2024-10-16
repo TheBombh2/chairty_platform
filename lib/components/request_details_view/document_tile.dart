@@ -1,20 +1,25 @@
+import 'package:chairty_platform/components/medical_docs_field/document_view.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DocumentTile extends StatelessWidget {
   const DocumentTile({
     required this.name,
-    required this.documentUri,
+    required this.documentUrl,
     super.key,
   });
   final String name;
-  final String documentUri;
+  final String documentUrl;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      onTap: () {},
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) =>
+                DocumentView(documentName: name, documentUrl: documentUrl)));
+      },
       leading: Container(
         decoration: BoxDecoration(
           color: Colors.green.shade300,

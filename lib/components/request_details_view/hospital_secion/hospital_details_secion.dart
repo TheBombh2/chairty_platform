@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+import 'package:chairty_platform/models/place.dart';
+import 'package:chairty_platform/screens/google_map/map_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HospitalDetailsSecion extends StatefulWidget {
   const HospitalDetailsSecion({
@@ -11,17 +10,17 @@ class HospitalDetailsSecion extends StatefulWidget {
     super.key,
   });
   final String hospitalName;
-  final LatLng hospitalLocation;
+  final PlaceLocation hospitalLocation;
 
   @override
   State<HospitalDetailsSecion> createState() => _HospitalDetailsSecionState();
 }
 
 class _HospitalDetailsSecionState extends State<HospitalDetailsSecion> {
-  // ignore: unused_field
-  late GoogleMapController _mapController;
-  void _onMapCreated(GoogleMapController controller) {
-    _mapController = controller;
+  String get locationImage {
+    final lat = widget.hospitalLocation.latitude;
+    final lng = widget.hospitalLocation.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=1000x700&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=AIzaSyDxPozXL_FEyJ0tHTz945Ox1Hllw8RGvdg';
   }
 
   @override
@@ -46,7 +45,21 @@ class _HospitalDetailsSecionState extends State<HospitalDetailsSecion> {
           SizedBox(
             width: double.infinity,
             child: Text(
-              widget.hospitalName,
+              'Hospital name: ${widget.hospitalName}',
+              textAlign: TextAlign.start,
+              style: GoogleFonts.varelaRound(
+                color: Colors.black87,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          SizedBox(
+            width: double.infinity,
+            child: Text(
+              'Hospital address: ${widget.hospitalLocation.address}',
               textAlign: TextAlign.start,
               style: GoogleFonts.varelaRound(
                 color: Colors.black87,
@@ -60,26 +73,25 @@ class _HospitalDetailsSecionState extends State<HospitalDetailsSecion> {
           SizedBox(
             height: 400,
             width: double.infinity,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: GoogleMap(
-                gestureRecognizers: {
-                  Factory<OneSequenceGestureRecognizer>(
-                      () => EagerGestureRecognizer())
-                },
-                onMapCreated: _onMapCreated,
-                initialCameraPosition: const CameraPosition(
-                    target: LatLng(31.135797330909583, 30.647989081583237),
-                    zoom: 16.0),
-                markers: {
-                   Marker(
-                    markerId: MarkerId(widget.hospitalName),
-                    position: widget.hospitalLocation,
-                    infoWindow: InfoWindow(
-                      title: widget.hospitalName,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (ctx) => MapPage(
+                      location: widget.hospitalLocation,
+                      isSelecting: false,
                     ),
                   ),
-                },
+                );
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Image.network(
+                  locationImage,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
+                ),
               ),
             ),
           ),

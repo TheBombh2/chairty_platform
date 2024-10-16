@@ -1,7 +1,10 @@
 #Env variabels and APIs
 .env
-google-services.json
 firebase_options.dart
+google-services.json
+GoogleService-Info.plist
+.firebase
+firebase.json
 # Miscellaneous
 *.class
 *.log
@@ -45,3 +48,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

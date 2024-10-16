@@ -1,45 +1,162 @@
-import 'package:chairty_platform/screens/patient_home_screen.dart';
+import 'package:chairty_platform/Firebase/auth_interface.dart';
+import 'package:chairty_platform/Firebase/fire_storage.dart';
+import 'package:chairty_platform/components/google_map/location_input.dart';
+import 'package:chairty_platform/components/medical_docs_field/medical_docs_field.dart';
+import 'package:chairty_platform/models/document.dart';
+import 'package:chairty_platform/models/place.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
+import 'package:chairty_platform/models/request.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../components/style.dart';
 
-
-var idController = TextEditingController();
-var reasonController = TextEditingController();
-var dangerController = TextEditingController();
-var fundsController = TextEditingController();
-var docsController = TextEditingController();
-var hospitalController = TextEditingController();
-var locationController = TextEditingController();
-var deadLineController = TextEditingController();
-
-class RequestAndEditScreen extends StatelessWidget {
+class RequestAndEditScreen extends StatefulWidget {
   const RequestAndEditScreen({super.key});
+
+  @override
+  State<RequestAndEditScreen> createState() => _RequestAndEditScreenState();
+}
+
+class _RequestAndEditScreenState extends State<RequestAndEditScreen> {
+  var reasonController = TextEditingController();
+  var dangerController = TextEditingController();
+  var fundsController = TextEditingController();
+  var hospitalNameController = TextEditingController();
+  var deadLineController = TextEditingController();
+  final List<Document> uploadedMedicalDocuments = [];
+  DateTime? pickedDate;
+
+  User? user = FirebaseAuth.instance.currentUser;
+
+  PlaceLocation? _selectedHospitalLocation;
+  final _formKey = GlobalKey<FormState>();
+
+  bool isUploading = false;
+
+  void onSubmit() async {
+    bool isValid = _formKey.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
+    if (uploadedMedicalDocuments.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You must at least upload one medical report.'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: (const Text('OK')))
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+    if (_selectedHospitalLocation == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You must select hospital location.'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: (const Text('OK')))
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+    if (pickedDate == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('You must select deadline date of your request'),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: (const Text('OK')))
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+    Request newRequest = Request(
+      patientId: AuthInterface.getCurrentUser()!.uid,
+      reason: reasonController.text,
+      danger: dangerController.text,
+      funds: int.parse(fundsController.text),
+      medicalDocuments: uploadedMedicalDocuments,
+      hospitalName: hospitalNameController.text,
+      hospitalLocation: _selectedHospitalLocation!,
+      deadline: pickedDate!,
+    );
+    setState(() {
+      isUploading = true;
+    });
+    for (var ele in newRequest.medicalDocuments) {
+      final url =
+          await FireStorageInterface.uploadMedicalDocument(ele.documentPath);
+      ele.docUrl = await url.getDownloadURL();
+    }
+
+    await newRequest.uploadRequest();
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Request Uploaded Successfully.')));
+    uploadedMedicalDocuments.clear();
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    reasonController.dispose();
+    dangerController.dispose();
+    fundsController.dispose();
+    hospitalNameController.dispose();
+    deadLineController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Scaffold(
-            body: Column(
+        appBar: AppBar(
+          title: Text(
+            "Fill Request Form",
+            style: GoogleFonts.varelaRound(
+              color: const Color(
+                0xffE2F1F2,
+              ),
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: const Color(0xff034956),
+        ),
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Your Request",
-              style: TextStyle(
-                  color: darkColor, fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(
-                    color: lightColor, borderRadius: BorderRadius.circular(20)),
+                decoration: BoxDecoration(color: lightColor),
                 child: Form(
+                  key: _formKey,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 20),
@@ -47,12 +164,6 @@ class RequestAndEditScreen extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          FormFields(
-                              controller: idController,
-                              type: TextInputType.number,
-                              hint: "Owner ID",
-                              label: "Owner ID",
-                              icon: Icons.person),
                           const SizedBox(
                             height: 20,
                           ),
@@ -61,9 +172,17 @@ class RequestAndEditScreen extends StatelessWidget {
                             type: TextInputType.multiline,
                             maxLines: 6,
                             hint: "Reason",
-                            label: "Your Reason",
+                            label: "Why do you need help?",
                             icon: Icons.question_mark_outlined,
                             isMultilineText: true,
+                            onValidate: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 100) {
+                                return 'Reason must be at least 100 characters';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -73,9 +192,17 @@ class RequestAndEditScreen extends StatelessWidget {
                             type: TextInputType.multiline,
                             maxLines: 6,
                             hint: "Danger",
-                            label: "Danger",
+                            label: "What is the danger?",
                             icon: Icons.dangerous,
                             isMultilineText: true,
+                            onValidate: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 100) {
+                                return 'Danger must be at least 100 characters';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -86,48 +213,57 @@ class RequestAndEditScreen extends StatelessWidget {
                             hint: "Funds",
                             label: "Funds",
                             icon: Icons.money,
+                            onValidate: (value) {
+                              final number = int.tryParse(value!);
+                              if (number == null || number <= 0) {
+                                return 'Enter a valid number';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          MedicalDocsField(
+                            uploadedDocuments: uploadedMedicalDocuments,
                           ),
                           const SizedBox(
                             height: 20,
                           ),
                           FormFields(
-                            controller: docsController,
-                            type: TextInputType.text,
-                            hint: "DOCs",
-                            label: "Your Medical DOCs Link",
-                            icon: Icons.picture_as_pdf,
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          FormFields(
-                            controller: hospitalController,
+                            controller: hospitalNameController,
                             type: TextInputType.text,
                             hint: "Hospital",
                             label: "Hospital Name",
                             icon: Icons.location_city,
+                            onValidate: (value) {
+                              if (value == null ||
+                                  value.isEmpty ||
+                                  value.length < 5) {
+                                return 'Hospital name must be at least 5 characters';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(
                             height: 20,
                           ),
-                          FormFields(
-                            controller: locationController,
-                            type: TextInputType.text,
-                            hint: "Location",
-                            label: "Hospital Location",
-                            icon: Icons.location_on_rounded,
-                          ),
+                          LocationInput(onSelectLocation: (location) {
+                            _selectedHospitalLocation = location;
+                          }),
                           const SizedBox(
                             height: 20,
                           ),
                           FormFields(
                             controller: deadLineController,
                             type: TextInputType.datetime,
-                            hint: "DeadLine",
-                            label: "DeadLine",
+                            hint: "Deadline",
+                            label: "Deadline",
                             icon: Icons.date_range,
                             onTap: () async {
-                              DateTime? pickedDate = await showDatePicker(
+                              FocusScope.of(context).requestFocus(
+                                  FocusNode()); // Prevent keyboard from appearing
+                              pickedDate = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime.now(),
@@ -153,36 +289,29 @@ class RequestAndEditScreen extends StatelessWidget {
                               );
                               if (pickedDate != null) {
                                 deadLineController.text =
-                                    DateFormat.yMMMd().format(pickedDate);
-                                print(DateFormat.yMMMd().format(pickedDate));
+                                    DateFormat.yMMMd().format(pickedDate!);
+                                print(DateFormat.yMMMd().format(pickedDate!));
                               }
                             },
+                            isDateField:
+                                true, // Custom flag to handle date fields
                           ),
                           const SizedBox(
                             height: 50,
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(builder: (context) => PatientHomeScreen()),
-                                        (Route<dynamic> route) => false,
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: darkColor),
-                                child:  const Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          )
+                          isUploading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: onSubmit,
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: darkColor),
+                                  child: const Text(
+                                    "Submit",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
                         ],
                       ),
                     ),
@@ -191,29 +320,35 @@ class RequestAndEditScreen extends StatelessWidget {
               ),
             ),
           ],
-        )),
-      ),
-    );
+        ));
   }
 }
 
-Widget FormFields(
-        {required TextEditingController controller,
-        required TextInputType type,
-        required String hint,
-        required String label,
-        required IconData icon,
-        bool isMultilineText = false,
-        double? hight,
-        int? maxLines,
-        Function? onTap}) =>
+Widget FormFields({
+  required TextEditingController controller,
+  required TextInputType type,
+  required String hint,
+  required String label,
+  required IconData icon,
+  String? Function(String?)? onValidate,
+  bool isMultilineText = false,
+  bool isDateField = false, // New flag
+  double? hight,
+  int? maxLines,
+  Function? onTap,
+}) =>
     SizedBox(
       height: hight,
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         keyboardType: type,
         maxLines: maxLines,
         textAlignVertical: TextAlignVertical.top,
+        readOnly: isDateField, // Make read-only for date fields
+        validator: onValidate,
+        onTap: isDateField
+            ? () => onTap!()
+            : null, // Trigger onTap only if date field
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
@@ -222,11 +357,26 @@ Widget FormFields(
                 width: 2,
               )),
           focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-              borderSide: BorderSide(
-                color: deepOrange,
-                width: 2,
-              )),
+            borderRadius: BorderRadius.circular(20),
+            borderSide: BorderSide(
+              color: deepOrange,
+              width: 2,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+          ),
           hintText: hint,
           hintStyle: TextStyle(fontWeight: FontWeight.bold, color: darkColor),
           labelText: label,

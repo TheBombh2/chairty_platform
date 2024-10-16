@@ -1,30 +1,30 @@
+import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/components/request_details_view/details_section.dart';
 import 'package:chairty_platform/components/request_details_view/documents_list_section.dart';
 import 'package:chairty_platform/components/request_details_view/donate_section.dart';
 import 'package:chairty_platform/components/request_details_view/hospital_secion/hospital_details_secion.dart';
+import 'package:chairty_platform/models/request.dart';
+import 'package:chairty_platform/screens/profile_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class RequestViewScreen extends StatelessWidget {
-  const RequestViewScreen({
-    required this.name,
-    required this.age,
-    required this.imageURI,
-    super.key,
-  });
-  final String name;
-  final String age;
-  final String imageURI;
+  const RequestViewScreen({super.key, required this.request});
+
+  final Request request;
 
   @override
   Widget build(BuildContext context) {
+    final paitent = request.paitent;
     return Scaffold(
       backgroundColor: const Color(0xFFF6FAF7),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          "Donate to $name",
+          request.patientId == AuthInterface.getCurrentUser()!.uid
+              ? 'Your Post'
+              : "Donate to ${paitent.firstName + paitent.lastName}",
           style: GoogleFonts.varelaRound(
             color: const Color(
               0xffE2F1F2,
@@ -43,11 +43,10 @@ class RequestViewScreen extends StatelessWidget {
                 height: 16,
               ),
               Hero(
-                tag: name,
-                child:  CircleAvatar(
+                tag: request.requestId!,
+                child: CircleAvatar(
                   radius: 80,
-                  backgroundImage:
-                      AssetImage(imageURI),
+                  backgroundImage: NetworkImage(paitent.imageUrl),
                 ),
               ),
               const SizedBox(
@@ -58,7 +57,7 @@ class RequestViewScreen extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Text(
-                      name,
+                      paitent.firstName + paitent.lastName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.varelaRound(
@@ -73,7 +72,7 @@ class RequestViewScreen extends StatelessWidget {
                     flex: 2,
                     child: Text(
                       textAlign: TextAlign.end,
-                      '$age y.o',
+                      '${DateTime.now().year - paitent.dateOfBirth.year} y.o',
                       style: GoogleFonts.varelaRound(
                           color: const Color(
                             0xff034956,
@@ -87,44 +86,79 @@ class RequestViewScreen extends StatelessWidget {
               const SizedBox(
                 height: 16,
               ),
-              const DetailsSection(
+              DetailsSection(
                 title: 'Why do I need the donation',
-                body:
-                    'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                backgroundColor: Color.fromARGB(255, 247, 224, 157),
+                body: request.reason,
+                backgroundColor: const Color.fromARGB(255, 247, 224, 157),
               ),
               const SizedBox(
                 height: 16,
               ),
-              const DetailsSection(
+              DetailsSection(
                 title: 'The danger that may affect me',
-                body:
-                    'Lorem Ipsum is simply dummy text of the printing and typesettintypesettingtypesettingtypesettingtypesettingtypesettingtypesettingtypesettingtypesettingtypesettinggtypesettingtypesettingtypesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
-                backgroundColor: Color.fromARGB(255, 250, 122, 165),
+                body: request.danger,
+                backgroundColor: const Color.fromARGB(255, 250, 122, 165),
               ),
               const SizedBox(
                 height: 16,
               ),
-              const DocumentsListSection(
-                documents: [
-                  'Medical Report 1',
-                  'Medical Report 2',
-                  'Medical Report 3',
-                ],
+              DocumentsListSection(
+                documents: request.medicalDocuments,
               ),
               const SizedBox(
                 height: 16,
               ),
-              const HospitalDetailsSecion(
-                hospitalName: 'Al amoma',
-                hospitalLocation: LatLng(31.13567354055204, 30.64803319513834),
+              HospitalDetailsSecion(
+                hospitalName: request.hospitalName,
+                hospitalLocation: request.hospitalLocation,
               ),
               const SizedBox(
                 height: 16,
               ),
-              const DonateSection(
-                amountNeeded: 500,
-              ),
+              (request.patientId == AuthInterface.getCurrentUser()!.uid) ||
+                      (request.requestCompleted)
+                  ? const SizedBox.shrink()
+                  : Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ProfileScreen(
+                                                user: paitent,
+                                                viewOnly: true,
+                                                patientId: request.patientId,
+                                                donaterId: FirebaseAuth
+                                                    .instance.currentUser?.uid,
+                                              ))),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 6, 144, 168),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16))),
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 11),
+                                    child: Text(
+                                      "view profile",
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        DonateSection(
+                          request: request,
+                        ),
+                      ],
+                    ),
               const SizedBox(
                 height: 24,
               )
