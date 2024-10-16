@@ -82,7 +82,7 @@ class DrawerMenu extends StatelessWidget {
                     builder: (ctx) => const RequestHistoryScreen()));
               },
             ),
-          DrawerListTile(
+         /* DrawerListTile(
             tileText: 'Settings',
             tileIcon: Icons.settings,
             onTileClicked: () {
@@ -91,6 +91,7 @@ class DrawerMenu extends StatelessWidget {
                   MaterialPageRoute(builder: (ctx) => const SettingsScreen()));
             },
           ),
+          */
           DrawerListTile(
             tileText: (AuthInterface.getCurrentCharityUser().userType ==
                     UserType.donator)
