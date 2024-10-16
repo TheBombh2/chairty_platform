@@ -66,7 +66,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   dateOfBirth: _selectedDateOfBirth!,
                   imageUrl: imageUrl,
                   bio: _enteredBio,
-                  wallet: 0)
+                  wallet: 0,
+                  moneyRequested: false)
               .toJson());
 
       setState(() {

@@ -14,6 +14,7 @@ class CharityUser {
     required this.imageUrl,
     required this.bio,
     required this.wallet,
+    required this.moneyRequested,
   });
 
   final String email;
@@ -26,6 +27,7 @@ class CharityUser {
   final String imageUrl;
   final String bio;
   final int wallet;
+  final bool moneyRequested;
 
   Map<String, dynamic> toJson() {
     return {
@@ -38,7 +40,8 @@ class CharityUser {
       'dateOfBirth': dateOfBirth.toIso8601String(),
       'imageUrl': imageUrl,
       'bio': bio,
-      'wallet':wallet
+      'wallet':wallet,
+      'moneyRequested':moneyRequested,
     };
   }
 
@@ -54,6 +57,7 @@ class CharityUser {
       imageUrl: json['imageUrl'],
       bio: json['bio'],
       wallet:json['wallet'],
+      moneyRequested: json['moneyRequested']
     );
   }
 }

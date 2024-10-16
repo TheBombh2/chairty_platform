@@ -6,6 +6,7 @@ import 'package:chairty_platform/screens/profile_screen.dart';
 import 'package:chairty_platform/screens/request_history_screen.dart';
 import 'package:chairty_platform/screens/settings_screen.dart';
 import 'package:chairty_platform/screens/users_list_screen.dart';
+import 'package:chairty_platform/screens/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -102,6 +103,18 @@ class DrawerMenu extends StatelessWidget {
                   .push(MaterialPageRoute(builder: (ctx) => UsersListScreen()));
             },
           ),
+          AuthInterface.getCurrentCharityUser().userType == UserType.patient
+              ? DrawerListTile(
+                  tileText: 'Wallet',
+                  tileIcon: Icons.wallet,
+                  onTileClicked: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => const WalletScreen(),
+                      ),
+                    );
+                  })
+              : const SizedBox.shrink(),
           DrawerListTile(
               tileText: 'Log out',
               tileIcon: Icons.logout,
@@ -113,7 +126,7 @@ class DrawerMenu extends StatelessWidget {
                 }
                 messagesCubit.clearState();
                 await AuthInterface.firebaseInstance.signOut();
-              })
+              }),
         ],
       ),
     );
