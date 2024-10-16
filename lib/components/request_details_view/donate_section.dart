@@ -1,15 +1,22 @@
+import 'package:chairty_platform/models/request.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../stripe_payment/payment_manager.dart';
 
-class DonateSection extends StatelessWidget {
+class DonateSection extends StatefulWidget {
   const DonateSection({
-    required this.amountNeeded,
+    required this.request,
     super.key,
   });
-  final int amountNeeded;
+  final Request request;
 
+  @override
+  State<DonateSection> createState() => _DonateSectionState();
+}
+
+class _DonateSectionState extends State<DonateSection> {
+  bool isPaying = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,7 +28,7 @@ class DonateSection extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'Donate \$$amountNeeded?',
+            'Donate \$${widget.request.funds}?',
             style: GoogleFonts.varelaRound(
                 color: const Color(0xFFF6FAF7),
                 fontSize: 20,
@@ -34,9 +41,18 @@ class DonateSection extends StatelessWidget {
             child: FilledButton.icon(
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.payment),
-              onPressed: () {
-                PaymentManager.makePayment(amountNeeded, "USD", context);
-              },
+              onPressed: isPaying
+                  ? null
+                  : () {
+                      setState(() {
+                        isPaying = true;
+                      });
+                      PaymentManager.makePayment(
+                          widget.request, "USD", context);
+                      setState(() {
+                        isPaying = false;
+                      });
+                    },
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFF26722),
               ),

@@ -1,3 +1,5 @@
+import 'package:chairty_platform/Firebase/fire_store.dart';
+import 'package:chairty_platform/models/request.dart';
 import 'package:chairty_platform/stripe_payment/stripe_keys.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -5,14 +7,17 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 
 abstract class PaymentManager {
   static Future<void> makePayment(
-      int amount, String currency, BuildContext context) async {
+      Request request, String currency, BuildContext context) async {
     try {
       String clintSecret =
-          await getClintSecret((amount * 100).toString(), currency);
+          await getClintSecret((request.funds * 100).toString(), currency);
       await initializePaymebtSheet(clintSecret);
       await Stripe.instance.presentPaymentSheet();
       //Successful payment
-      
+      await FirestoreInterface.completeRequestPayment(request);
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
     } on StripeException catch (error) {
       if (context.mounted) {
         ScaffoldMessenger.of(context)

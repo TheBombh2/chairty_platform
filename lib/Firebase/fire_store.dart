@@ -108,6 +108,24 @@ class FirestoreInterface {
         .update({field: newData});
   }
 
+  static Future<void> completeRequestPayment(Request request) async {
+    final paitent = await FirestoreInterface.getUserById(request.patientId);
+    if (paitent == null) {
+      return;
+    }
+
+    await firebaseInstance
+        .collection('requests')
+        .doc(request.requestId)
+        .update({
+      'requestCompleted': true,
+      'donaterId': AuthInterface.getCurrentUser()!.uid,
+    });
+    await firebaseInstance
+        .collection('users')
+        .doc(request.patientId)
+        .update({'wallet': paitent.wallet + request.funds});
+  }
   // static Future<void> init(String uid) async {
   //   UserType? userType = (await getUserById(uid))!.userType;
   //   QuerySnapshot allRequestsSnapshot =

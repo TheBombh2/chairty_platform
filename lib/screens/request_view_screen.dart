@@ -155,7 +155,7 @@ class RequestViewScreen extends StatelessWidget {
                           height: 16,
                         ),
                         DonateSection(
-                          amountNeeded: request.funds,
+                          request: request,
                         ),
                       ],
                     ),

@@ -1,4 +1,3 @@
-import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/components/request_history_list/request_history_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
