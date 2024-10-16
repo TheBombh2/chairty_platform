@@ -129,11 +129,11 @@ class RegistrationScreenState extends State<RegistrationScreen> {
           userUid, File(_selectedImage!.path));
 
       final imageUrl = await storageRef.getDownloadURL();
-      final _selectedType = widget.type == UserType.patient.name
+      final _selectedType = widget.type.toLowerCase() == UserType.patient.name
           ? UserType.patient
           : UserType.donator;
       final _selectedGender =
-          _gender == Gender.male.name ? Gender.male : Gender.female;
+          _gender!.toLowerCase() == Gender.male.name ? Gender.male : Gender.female;
 
       await FirestoreInterface.registerNewUser(
           userUid,

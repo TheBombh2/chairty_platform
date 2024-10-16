@@ -19,15 +19,17 @@ class RequestsCubit extends Cubit<RequestsState> {
         List<Request> completedRequests = [];
         List<Request> uncompletedRequsts = [];
 
-        for (var element in event.docs) {
-          final request = Request.fromJson(element.data(), element.id);
-          await request.initializePatient();
-          loadedRequests.add(request);
-          if (request.requestCompleted ) {
-            await request.initializeDonater();
-            completedRequests.add(request);
-          } else if(!request.requestCompleted && !request.requestExpired){
-            uncompletedRequsts.add(request);
+        if (event.docs.isNotEmpty) {
+          for (var element in event.docs) {
+            final request = Request.fromJson(element.data(), element.id);
+            await request.initializePatient();
+            loadedRequests.add(request);
+            if (request.requestCompleted) {
+              await request.initializeDonater();
+              completedRequests.add(request);
+            } else if (!request.requestCompleted && !request.requestExpired) {
+              uncompletedRequsts.add(request);
+            }
           }
         }
 
