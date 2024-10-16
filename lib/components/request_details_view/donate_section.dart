@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../stripe_payment/payment_manager.dart';
+
 class DonateSection extends StatelessWidget {
   const DonateSection({
     required this.amountNeeded,
@@ -32,7 +34,9 @@ class DonateSection extends StatelessWidget {
             child: FilledButton.icon(
               iconAlignment: IconAlignment.end,
               icon: const Icon(Icons.payment),
-              onPressed: () {},
+              onPressed: () {
+                PaymentManager.makePayment(amountNeeded,"USD");
+              },
               style: FilledButton.styleFrom(
                 backgroundColor: const Color(0xFFF26722),
               ),
