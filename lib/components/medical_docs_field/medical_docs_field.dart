@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:chairty_platform/components/style.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:chairty_platform/components/style.dart';
 
 class MedicalDocsField extends StatefulWidget {
   const MedicalDocsField({

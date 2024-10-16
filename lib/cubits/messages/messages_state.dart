@@ -1,7 +1,5 @@
 import 'package:chairty_platform/models/user.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../models/message.dart';
 
 abstract class MessagesState {}
 
