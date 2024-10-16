@@ -11,7 +11,7 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<String> _getUserType(String uid) async {
+    Future<String> getUserType(String uid) async {
       AuthInterface.user = await FirestoreInterface.getUserById(
           AuthInterface.getCurrentUser()!.uid);
       final document =
@@ -24,10 +24,9 @@ class AuthScreen extends StatelessWidget {
       stream: AuthInterface.firebaseInstance.authStateChanges(),
       builder: (ctx, snapshot) {
         late String userType;
-
         if (snapshot.hasData) {
           return FutureBuilder(
-            future: _getUserType(snapshot.data!.uid),
+            future: getUserType(snapshot.data!.uid),
             builder: (context, AsyncSnapshot<String> userTypeSnapshot) {
               if (userTypeSnapshot.hasData) {
                 userType = userTypeSnapshot.data!;

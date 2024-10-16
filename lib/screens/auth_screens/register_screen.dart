@@ -4,6 +4,7 @@ import 'package:chairty_platform/Firebase/auth_interface.dart';
 import 'package:chairty_platform/Firebase/fire_storage.dart';
 import 'package:chairty_platform/Firebase/fire_store.dart';
 import 'package:chairty_platform/models/user.dart';
+import 'package:chairty_platform/screens/auth_screens/auth_screen.dart';
 import 'package:chairty_platform/screens/auth_screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -132,8 +133,9 @@ class RegistrationScreenState extends State<RegistrationScreen> {
       final _selectedType = widget.type.toLowerCase() == UserType.patient.name
           ? UserType.patient
           : UserType.donator;
-      final _selectedGender =
-          _gender!.toLowerCase() == Gender.male.name ? Gender.male : Gender.female;
+      final _selectedGender = _gender!.toLowerCase() == Gender.male.name
+          ? Gender.male
+          : Gender.female;
 
       await FirestoreInterface.registerNewUser(
           userUid,
@@ -151,12 +153,16 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                   moneyRequested: false)
               .toJson());
 
+      await AuthInterface.firebaseInstance.signOut();
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (ctx) => const AuthScreen()),
+          (Route<dynamic> route) => false);
+
       setState(() {
         _isAuthenticating = false;
       });
-      if (mounted) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx)=>const LoginScreen()));
-      }
     } on FirebaseAuthException catch (error) {
       setState(() {
         _isAuthenticating = false;
@@ -189,7 +195,10 @@ class RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.type} Registration',style: const TextStyle(color: Colors.white),),
+        title: Text(
+          '${widget.type} Registration',
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
       body: Padding(
@@ -363,13 +372,15 @@ class RegistrationScreenState extends State<RegistrationScreen> {
                 style: const TextStyle(color: Color(0xFF034956)),
               ),
               ElevatedButton(
-                onPressed: () async {
-                  final XFile? image = await _picker.pickImage(
-                      source: ImageSource.gallery); // Correct usage
-                  setState(() {
-                    _selectedImage = image;
-                  });
-                },
+                onPressed: _isAuthenticating
+                    ? null
+                    : () async {
+                        final XFile? image = await _picker.pickImage(
+                            source: ImageSource.gallery); // Correct usage
+                        setState(() {
+                          _selectedImage = image;
+                        });
+                      },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.secondary,
                 ),
