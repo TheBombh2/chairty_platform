@@ -1,6 +1,10 @@
 # Charity Mobile App  
 A Flutter-based mobile application developed to connect patients in need with generous donors, enabling seamless donation requests and contributions. This project was completed as part of the **Digital Egypt Pioneers Initiative (DEPI) Internship** and embodies the spirit of using technology for social good.  
 
+# Preview
+
+https://github.com/user-attachments/assets/da231df8-db5b-49ce-8f9e-6d2b317c89ec
+
 ## Features  
 - **Patient Registration**: Patients can create profiles and submit donation requests with ease.  
 - **Donor Registration & Case Browsing**: Donors can explore a variety of cases and make donations seamlessly through Stripe.  
