@@ -34,7 +34,7 @@ https://github.com/user-attachments/assets/da231df8-db5b-49ce-8f9e-6d2b317c89ec
 - [Maryam Ghoneim](https://github.com/MaryamGhoneim219)
 - [Mazen AMR Ashour](https://github.com/mazen675)
 - [Abdullah Etman](https://github.com/abdullahnaderetman)
-- [Abdelrahman Mohamed](https://github.com/bodaalaa19)
+- [Abdelrahman Alaa](https://github.com/bodaalaa19)
 
 
 ## Project Inspiration  
